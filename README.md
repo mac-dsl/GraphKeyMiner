@@ -1,2 +1,2 @@
 # GraphKeyMiner
-A project to mine graph keys in an attributed graph
+A project to mine graph keys in an attributed graph.
