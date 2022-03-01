@@ -4,10 +4,8 @@ import Infra.Attribute;
 import Infra.DataVertex;
 import Infra.RelationshipEdge;
 import Util.Config;
-import com.amazonaws.services.s3.model.S3Object;
 import org.apache.jena.rdf.model.*;
 
-import java.io.BufferedReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
