@@ -43,27 +43,8 @@ public class IMDBLoader extends GraphLoader{
             HashSet<String> types=new HashSet <>();
             Model model = ModelFactory.createDefaultModel();
 
-            if(Config.Amazon)
-            {
-                AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                        .withRegion(Config.region)
-                        //.withCredentials(new ProfileCredentialsProvider())
-                        //.withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
-                        .build();
-                //TODO: Need to check if the path is correct (should be in the form of bucketName/Key )
-                String bucketName=dataGraphFilePath.substring(0,dataGraphFilePath.lastIndexOf("/"));
-                String key=dataGraphFilePath.substring(dataGraphFilePath.lastIndexOf("/")+1);
-                System.out.println("Downloading the object from Amazon S3 - Bucket name: " + bucketName +" - Key: " + key);
-                fullObject = s3Client.getObject(new GetObjectRequest(bucketName, key));
-
-                br = new BufferedReader(new InputStreamReader(fullObject.getObjectContent()));
-                model.read(br,null, Config.language);
-            }
-            else
-            {
-                Path input= Paths.get(dataGraphFilePath);
-                model.read(input.toUri().toString());
-            }
+            Path input= Paths.get(dataGraphFilePath);
+            model.read(input.toUri().toString());
 
             StmtIterator dataTriples = model.listStatements();
             while (dataTriples.hasNext()) {
@@ -84,8 +65,8 @@ public class IMDBLoader extends GraphLoader{
                 String subjectID=temp[1];
 
                 // ignore the node if the type is not in the validTypes and
-                // optimizedLoadingBasedOnTGFD is true
-                if(Config.optimizedLoadingBasedOnTGFD && !validTypes.contains(subjectType))
+                // optimizedLoadingBasedOnTypes is true
+                if(Config.optimizedLoadingBasedOnTypes && !validTypes.contains(subjectType))
                     continue;
 
                 types.add(subjectType);
@@ -106,7 +87,7 @@ public class IMDBLoader extends GraphLoader{
                 if (object.isLiteral())
                 {
                     objectNodeURI = object.asLiteral().getString().toLowerCase();
-                    if(Config.optimizedLoadingBasedOnTGFD && validAttributes.contains(predicate)) {
+                    if(Config.optimizedLoadingBasedOnTypes && validAttributes.contains(predicate)) {
                         subjectVertex.addAttribute(new Attribute(predicate, objectNodeURI));
                         graphSize++;
                     }
@@ -129,7 +110,7 @@ public class IMDBLoader extends GraphLoader{
 
                     // ignore the node if the type is not in the validTypes and
                     // optimizedLoadingBasedOnTGFD is true
-                    if(Config.optimizedLoadingBasedOnTGFD && !validTypes.contains(objectType))
+                    if(Config.optimizedLoadingBasedOnTypes && !validTypes.contains(objectType))
                         continue;
 
                     types.add(objectType);
@@ -152,12 +133,6 @@ public class IMDBLoader extends GraphLoader{
             //System.out.println("Number of subjects not found: " + numberOfSubjectsNotFound);
             //System.out.println("Number of loops found: " + numberOfLoops);
 
-            if (fullObject != null) {
-                fullObject.close();
-            }
-            if (br != null) {
-                br.close();
-            }
             model.close();
         }
         catch (Exception e)
