@@ -1,28 +1,58 @@
 package Infra;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class CandidateGKey {
 
-    private int id;
     private String mainType;
-    private ArrayList<String> attributes;
-    private ArrayList<String> dependantTypes;
+    private HashSet<String> allNodeNames;
+    private ArrayList<CandidateNode> attributes;
+    private ArrayList<CandidateNode> dependantTypes;
+    private boolean prune=false;
 
-    public CandidateGKey(int id, String mainType, ArrayList<String> attributes, ArrayList<String> dependantTypes)
+    public CandidateGKey(String mainType, List<CandidateNode> nodes)
     {
-        this.id=id;
         this.mainType=mainType;
-        this.attributes=attributes;
-        this.dependantTypes=dependantTypes;
+        this.attributes=new ArrayList<>();
+        this.dependantTypes=new ArrayList<>();
+        allNodeNames =new HashSet<>();
+        for (CandidateNode node:nodes) {
+            if(node.getType()==CandidateType.ConstantNode)
+            {
+                attributes.add(node);
+                allNodeNames.add(node.getName());
+            }
+            else if(node.getType()==CandidateType.VariableNode)
+            {
+                dependantTypes.add(node);
+                allNodeNames.add(node.getName());
+            }
+        }
+        prune=false;
     }
 
-    public ArrayList<String> getAttributes() {
+    public ArrayList<CandidateNode> getAttributes() {
         return attributes;
     }
 
-    public ArrayList<String> getDependantTypes() {
+    public HashSet<String> getAllNodeNames() {
+        return allNodeNames;
+    }
+
+    public boolean checkToBePruned(CandidateGKey prunedGKey)
+    {
+        if(allNodeNames.containsAll(prunedGKey.getAllNodeNames()))
+        {
+            prune = true;
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public ArrayList<CandidateNode> getDependantTypes() {
         return dependantTypes;
     }
 
@@ -30,7 +60,11 @@ public class CandidateGKey {
         return mainType;
     }
 
-    public int getId() {
-        return id;
+    public void setPrune(boolean prune) {
+        this.prune = prune;
+    }
+
+    public boolean isPrune() {
+        return prune;
     }
 }

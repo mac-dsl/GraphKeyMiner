@@ -9,16 +9,16 @@ import java.util.*;
 
 public class VF2DataGraph implements Serializable {
 
-    private Graph<Vertex, RelationshipEdge> graph = new DefaultDirectedGraph<>(RelationshipEdge.class);
+    private Graph<DataVertex, RelationshipEdge> graph = new DefaultDirectedGraph<>(RelationshipEdge.class);
 
-    private HashMap<String, Vertex> nodeMap;
+    private HashMap<String, DataVertex> nodeMap;
 
     public VF2DataGraph()
     {
         nodeMap= new HashMap<>();
     }
 
-    public VF2DataGraph(Graph <Vertex, RelationshipEdge> graph)
+    public VF2DataGraph(Graph <DataVertex, RelationshipEdge> graph)
     {
         nodeMap= new HashMap<>();
         this.graph = graph;
@@ -30,7 +30,7 @@ public class VF2DataGraph implements Serializable {
         }
     }
 
-    public Graph<Vertex, RelationshipEdge> getGraph() {
+    public Graph<DataVertex, RelationshipEdge> getGraph() {
         return graph;
     }
 
@@ -43,7 +43,7 @@ public class VF2DataGraph implements Serializable {
         }
     }
 
-    public Vertex getNode(String vertexURI)
+    public DataVertex getNode(String vertexURI)
     {
         return nodeMap.getOrDefault(vertexURI, null);
     }
@@ -70,7 +70,7 @@ public class VF2DataGraph implements Serializable {
         return nodeMap.size();
     }
 
-    public HashMap<String, Vertex> getNodeMap() {
+    public HashMap<String, DataVertex> getNodeMap() {
         return nodeMap;
     }
 
@@ -78,7 +78,7 @@ public class VF2DataGraph implements Serializable {
     {
         Graph<Vertex, RelationshipEdge> subgraph = new DefaultDirectedGraph<>(RelationshipEdge.class);
 
-        List<Vertex> withinDiameter=new ArrayList<>();
+        List<DataVertex> withinDiameter=new ArrayList<>();
 
         // Define a HashMap to store visited vertices
         HashMap<String,Integer> visited=new HashMap<>();
@@ -140,7 +140,7 @@ public class VF2DataGraph implements Serializable {
         for (Vertex vertex:withinDiameter) {
             subgraph.addVertex(vertex);
         }
-        for (Vertex source:withinDiameter) {
+        for (DataVertex source:withinDiameter) {
             for (RelationshipEdge e:graph.outgoingEdgesOf(source)) {
                 DataVertex target=(DataVertex)e.getTarget();
                 if(visited.containsKey(target.getVertexURI()))
@@ -216,7 +216,7 @@ public class VF2DataGraph implements Serializable {
     {
         int size=0;
 
-        List<Vertex> withinDiameter=new ArrayList<>();
+        List<DataVertex> withinDiameter=new ArrayList<>();
 
         // Define a HashMap to store visited vertices
         HashMap<String,Integer> visited=new HashMap<>();
@@ -265,7 +265,7 @@ public class VF2DataGraph implements Serializable {
                 }
             }
         }
-        for (Vertex source : withinDiameter) {
+        for (DataVertex source : withinDiameter) {
             for (RelationshipEdge e : graph.outgoingEdgesOf(source)) {
                 DataVertex target = (DataVertex) e.getTarget();
                 if (visited.containsKey(target.getVertexURI()))
