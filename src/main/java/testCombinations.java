@@ -12,11 +12,11 @@ public class testCombinations {
     public static void main(String []args)
     {
         ArrayList<CandidateNode> availableCandidates=new ArrayList<>();
-        availableCandidates.add(new CandidateNode("type1", CandidateType.ConstantNode));
-        availableCandidates.add(new CandidateNode("type2", CandidateType.VariableNode));
-        availableCandidates.add(new CandidateNode("type3", CandidateType.ConstantNode));
-        availableCandidates.add(new CandidateNode("type4", CandidateType.VariableNode));
-        availableCandidates.add(new CandidateNode("type5", CandidateType.VariableNode));
+        availableCandidates.add(new CandidateNode("type1",null, CandidateType.ConstantNode));
+        availableCandidates.add(new CandidateNode("type2","edge1", CandidateType.VariableNode));
+        availableCandidates.add(new CandidateNode("type3", null, CandidateType.ConstantNode));
+        availableCandidates.add(new CandidateNode("type4","edge2", CandidateType.VariableNode));
+        availableCandidates.add(new CandidateNode("type5","edge3", CandidateType.VariableNode));
         HashMap<Integer, List<CandidateGKey>> allCandidates=new HashMap<>();
         for (int i=1;i<=availableCandidates.size();i++)
         {

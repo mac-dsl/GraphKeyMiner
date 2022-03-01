@@ -2,20 +2,26 @@ package Infra;
 
 public class CandidateNode {
 
-    private String name;
-    private CandidateType type;
+    private String nodeName;
+    private String edgeName;
+    private CandidateType candidateType;
 
-    public CandidateNode(String name, CandidateType type)
+    public CandidateNode(String nodeName, String edgeName, CandidateType type)
     {
-        this.name=name;
-        this.type=type;
+        this.nodeName =nodeName;
+        this.edgeName=edgeName;
+        this.candidateType =type;
     }
 
-    public CandidateType getType() {
-        return type;
+    public CandidateType getCandidateType() {
+        return candidateType;
     }
 
-    public String getName() {
-        return name;
+    public String getNodeName() {
+        return nodeName;
+    }
+
+    public String getEdgeName() {
+        return edgeName;
     }
 }

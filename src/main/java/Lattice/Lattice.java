@@ -91,13 +91,13 @@ public class Lattice {
             for (Attribute attr:main.getAllAttributesList()) {
                 if((attr.getCount()/main.getCount())>delta)
                 {
-                    availableCandidates.add(new CandidateNode(attr.getAttrName(),CandidateType.ConstantNode));
+                    availableCandidates.add(new CandidateNode(attr.getAttrName(),null,CandidateType.ConstantNode));
                 }
             }
             for (RelationshipEdge e:summaryGraph.getSummaryGraph().outgoingEdgesOf(main)) {
                 if((e.getCount()/((SummaryVertex)(e.getTarget())).getCount())>delta)
                 {
-                    availableCandidates.add(new CandidateNode(e.getTarget().getType(), CandidateType.VariableNode));
+                    availableCandidates.add(new CandidateNode(e.getTarget().getType(), e.getLabel(), CandidateType.VariableNode));
                 }
             }
         }

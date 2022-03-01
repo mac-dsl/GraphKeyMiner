@@ -3,13 +3,17 @@ package Infra;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class DataVertex extends Vertex implements Serializable {
 
     private String vertexURI="";
     private HashSet<HashSet<String>> uniqueness;
+    private int entityID=-1;
 
     public DataVertex(String uri, String type) {
         super(type.toLowerCase());
@@ -18,12 +22,33 @@ public class DataVertex extends Vertex implements Serializable {
         uniqueness =new HashSet<>();
     }
 
-    public boolean isInduced(CandidateGKey gkey)
+    public boolean isInduced(ArrayList<CandidateNode> attributeNodes)
     {
-        return gkey
-                .getAttributes()
+        return attributeNodes
                 .stream()
-                .allMatch(node -> this.hasAttribute(node.getName()));
+                .allMatch(node -> this.hasAttribute(node.getNodeName()));
+    }
+
+    public boolean isInduced(ArrayList<CandidateNode> attributeNodes, ArrayList<CandidateNode> dependantTypes, Set<RelationshipEdge> edges)
+    {
+        boolean res = attributeNodes
+                .stream()
+                .allMatch(node -> this.hasAttribute(node.getNodeName()));
+        if(!res)
+            return false;
+        boolean exists;
+        for (CandidateNode node : dependantTypes) {
+            exists = false;
+            for (RelationshipEdge e : edges) {
+                if (e.getLabel().equals(node.getEdgeName()) && e.getTarget().getTypes().contains(node.getNodeName())) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists)
+                return false;
+        }
+        return true;
     }
 
     public boolean isUnique(HashSet<String> attributeNames)
@@ -33,13 +58,39 @@ public class DataVertex extends Vertex implements Serializable {
                 .anyMatch(attributeNames::containsAll);
     }
 
+    public String valueOf(ArrayList<CandidateNode> dependantTypes, Set<RelationshipEdge> edges)
+    {
+        String res="";
+        for (CandidateNode node : dependantTypes) {
+            for (RelationshipEdge e : edges) {
+                if (e.getLabel().equals(node.getEdgeName()) && e.getTarget().getTypes().contains(node.getNodeName())) {
+                    if(((DataVertex)e.getTarget()).getEntityID()!=-1)
+                    {
+                        res+=((DataVertex)e.getTarget()).getEntityID();
+                    }
+                    else
+                        return "-1";
+                    break;
+                }
+            }
+        }
+        return res;
+    }
+
     public String valueOf(HashSet<String> attributeNames)
     {
-        String res= attributeNames
+        return attributeNames
                 .stream()
                 .map(this::getAttributeValueByName)
                 .collect(Collectors.joining());
-        return res;
+    }
+
+    public int getEntityID() {
+        return entityID;
+    }
+
+    public void setEntityID(int entityID) {
+        this.entityID = entityID;
     }
 
     public void addUniqueness(String attributeName)

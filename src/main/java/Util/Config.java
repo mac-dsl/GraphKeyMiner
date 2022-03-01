@@ -33,6 +33,7 @@ public class Config {
     public static String dataset="imdb";
     public static long threadsIdleTime=3000;// in ms
     public static int supersteps=0;
+    public static int entityID=1;
 
     public static boolean optimizedLoadingBasedOnTGFD=false;
     public static boolean saveViolations=false;

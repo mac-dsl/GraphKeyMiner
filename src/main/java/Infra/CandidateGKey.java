@@ -19,15 +19,15 @@ public class CandidateGKey {
         this.dependantTypes=new ArrayList<>();
         allNodeNames =new HashSet<>();
         for (CandidateNode node:nodes) {
-            if(node.getType()==CandidateType.ConstantNode)
+            if(node.getCandidateType()==CandidateType.ConstantNode)
             {
                 attributes.add(node);
-                allNodeNames.add(node.getName());
+                allNodeNames.add(node.getNodeName());
             }
-            else if(node.getType()==CandidateType.VariableNode)
+            else if(node.getCandidateType()==CandidateType.VariableNode)
             {
                 dependantTypes.add(node);
-                allNodeNames.add(node.getName());
+                allNodeNames.add(node.getNodeName());
             }
         }
         prune=false;
