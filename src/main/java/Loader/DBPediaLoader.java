@@ -52,8 +52,6 @@ public class DBPediaLoader extends GraphLoader {
             System.out.println("No Input Node Types File Path!");
             return;
         }
-        S3Object fullObject = null;
-        BufferedReader br=null;
         try
         {
             Model model = ModelFactory.createDefaultModel();
@@ -90,12 +88,6 @@ public class DBPediaLoader extends GraphLoader {
                 }
             }
             System.out.println("Done. Number of Types: " + graph.getSize());
-            if (fullObject != null) {
-                fullObject.close();
-            }
-            if (br != null) {
-                br.close();
-            }
             model.close();
         }
         catch (Exception e)
