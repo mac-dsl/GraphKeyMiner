@@ -4,17 +4,14 @@ import java.util.*;
 
 public class DependencyGraph {
 
-    private List<List<Integer>> adj;
+    private HashMap<Integer, List<Integer>> adj;
     private HashMap<String, Integer> nodes;
     private int id=0;
 
-    public DependencyGraph(int V)
+    public DependencyGraph()
     {
-        adj = new ArrayList<>(V);
+        adj = new HashMap<>();
         nodes = new HashMap<>();
-
-        for (int i = 0; i < V; i++)
-            adj.add(new LinkedList<>());
     }
 
     public void addEdge(String source, String dest) {
@@ -34,7 +31,6 @@ public class DependencyGraph {
     }
     public boolean isCyclic()
     {
-
         boolean[] visited = new boolean[id];
         boolean[] recStack = new boolean[id];
         for (int i = 0; i < id; i++)
@@ -67,8 +63,9 @@ public class DependencyGraph {
     {
         if(!nodes.containsKey(nodeName))
         {
-            nodes.put(nodeName, id++);
-            adj.add(new LinkedList<>());
+            nodes.put(nodeName, id);
+            adj.put(id,new LinkedList<>());
+            id++;
         }
     }
 

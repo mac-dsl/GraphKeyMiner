@@ -24,4 +24,17 @@ public class CandidateNode {
     public String getEdgeName() {
         return edgeName;
     }
+
+    @Override
+    public String toString() {
+        if(candidateType.equals(CandidateType.ConstantNode))
+            return "Node{" +
+                    "AttributeName='" + nodeName + '\'' +
+                    '}';
+        else
+            return "Node{" +
+                    "NodeType='" + nodeName + '\'' +
+                    ", EdgeName='" + edgeName + '\'' +
+                    '}';
+    }
 }

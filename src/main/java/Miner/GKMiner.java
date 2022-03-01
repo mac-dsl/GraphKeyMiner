@@ -51,6 +51,10 @@ public class GKMiner {
         }
     }
 
+    public HashMap<String, ArrayList<CandidateGKey>> getAllGKeys() {
+        return allGKeys;
+    }
+
     private boolean isAGraphkey(CandidateGKey gkey)
     {
         boolean isGKey=true;

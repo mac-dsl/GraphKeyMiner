@@ -14,7 +14,7 @@ public class SummaryGraph {
 
     private HashMap<String, SummaryVertex> nodeMap;
 
-    public void SummaryGraph(VF2DataGraph dataGraph)
+    public SummaryGraph(VF2DataGraph dataGraph)
     {
         this.nodeMap=new HashMap<>();
         this.dataGraph=dataGraph;

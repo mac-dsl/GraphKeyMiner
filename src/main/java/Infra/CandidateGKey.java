@@ -67,4 +67,13 @@ public class CandidateGKey {
     public boolean isPrune() {
         return prune;
     }
+
+    @Override
+    public String toString() {
+        return "GKey{" +
+                "mainType='" + mainType + '\'' +
+                ", attributes=" + attributes +
+                ", RecursiveTypes=" + dependantTypes +
+                '}';
+    }
 }
