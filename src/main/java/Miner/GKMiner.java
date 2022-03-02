@@ -6,10 +6,9 @@ import Lattice.Lattice;
 import Summary.SummaryGraph;
 import Util.Config;
 import Util.Helper;
+import org.apache.jena.tdb.store.Hash;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GKMiner {
@@ -22,8 +21,9 @@ public class GKMiner {
     private HashMap<String, ArrayList<CandidateGKey>> allGKeys;
     private SummaryGraph summaryGraph;
     private DependencyGraph dependencyGraph;
+    private boolean originalType;
 
-    public GKMiner(VF2DataGraph dataGraph, SummaryGraph summaryGraph, DependencyGraph dependencyGraph, String type, double delta, int k)
+    public GKMiner(VF2DataGraph dataGraph, SummaryGraph summaryGraph, DependencyGraph dependencyGraph, String type, double delta, int k, boolean originalType)
     {
         this.dataGraph=dataGraph;
         this.delta=delta;
@@ -32,6 +32,7 @@ public class GKMiner {
         this.summaryGraph=summaryGraph;
         this.allGKeys=new HashMap<>();
         this.dependencyGraph = dependencyGraph;
+        this.originalType = originalType;
 
         Helper.setTemporaryTimer();
         this.lattice=new Lattice(summaryGraph,type,delta,k);
@@ -50,6 +51,8 @@ public class GKMiner {
                     allGKeys.put(type, new ArrayList<>());
                 allGKeys.get(type).add(gkey);
                 lattice.prune(gkey);
+                if(!originalType)
+                    break;
             }
             gkey=lattice.next();
         }
@@ -99,6 +102,7 @@ public class GKMiner {
         }
         else // Variable GKey
         {
+            HashSet<String> toBeRemoved=new HashSet<>();
             for (CandidateNode node:gkey.getDependantTypes()) {
                 if(!allGKeys.containsKey(node.getNodeName()))
                 {
@@ -106,12 +110,14 @@ public class GKMiner {
                     if(dependencyGraph.isCyclic())
                     {
                         dependencyGraph.removeEdge(type,node.getNodeName());
+                        toBeRemoved.add(node.getNodeName());
                         // Need to remove the dependency as well from the Lattice
                     }
                     else
                     {
-                        System.out.println("Recursive call for gkey:" + gkey.toString());
-                        GKMiner recursiveMiner=new GKMiner(dataGraph,summaryGraph,dependencyGraph,node.getNodeName(),delta, (k-gkey.getAttributes().size() - gkey.getDependantTypes().size()));
+                        if(Config.debug)
+                            System.out.println("Recursive call from "+gkey.getMainType()+" for "+node.getNodeName()+" - Current candidate: " + gkey);
+                        GKMiner recursiveMiner=new GKMiner(dataGraph,summaryGraph,dependencyGraph,node.getNodeName(),delta, (k - gkey.getAttributes().size() - gkey.getDependantTypes().size()),false);
                         recursiveMiner.mine();
                         if(!allGKeys.containsKey(node.getNodeName()))
                         {
@@ -121,6 +127,9 @@ public class GKMiner {
                     }
                 }
             }
+            gkey.getDependantTypes()
+                    .removeIf(candidateNode -> toBeRemoved.contains(candidateNode.getNodeName()));
+
             HashSet<String> attributeNames = gkey
                     .getAttributes()
                     .stream()
@@ -171,7 +180,8 @@ public class GKMiner {
                 }
             }
         }
-        Helper.printWithTime("Miner (IsAGkey for candidate of size " +(gkey.getDependantTypes().size() + gkey.getAttributes().size()) + "): ");
+        if(Config.debug)
+            Helper.printWithTime("Miner (IsAGkey for candidate ["+gkey.getMainType()+"] of size [" +(gkey.getDependantTypes().size() + gkey.getAttributes().size()) + "] ): ");
         return isGKey;
     }
 

@@ -41,7 +41,7 @@ public class testDBPedia {
         System.out.println("Mining graph keys.");
         startTime=System.currentTimeMillis();
 
-        GKMiner miner = new GKMiner(dbpedia.getGraph(), summaryGraph,dependencyGraph,Config.type,Config.delta,Config.k);
+        GKMiner miner = new GKMiner(dbpedia.getGraph(), summaryGraph,dependencyGraph,Config.type,Config.delta,Config.k, true);
         miner.mine();
 
         Helper.printWithTime("Mining time: ", System.currentTimeMillis()-startTime);
