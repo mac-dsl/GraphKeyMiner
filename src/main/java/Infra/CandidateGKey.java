@@ -10,7 +10,8 @@ public class CandidateGKey {
     private HashSet<String> allNodeNames;
     private ArrayList<CandidateNode> attributes;
     private ArrayList<CandidateNode> dependantTypes;
-    private boolean prune=false;
+    private double inducedEntities, totalNumberOfMatches;
+    private boolean prune;
 
     public CandidateGKey(String mainType, List<CandidateNode> nodes)
     {
@@ -64,14 +65,23 @@ public class CandidateGKey {
         this.prune = prune;
     }
 
-    public boolean isPrune() {
+    public boolean isPruned() {
         return prune;
+    }
+
+    public void setInducedEntities(double inducedEntities) {
+        this.inducedEntities = inducedEntities;
+    }
+
+    public void setTotalNumberOfMatches(int totalNumberOfMatches) {
+        this.totalNumberOfMatches = totalNumberOfMatches;
     }
 
     @Override
     public String toString() {
         return "GKey{" +
                 "mainType='" + mainType + '\'' +
+                "support='" + inducedEntities + "/" + totalNumberOfMatches + "= " + (inducedEntities/totalNumberOfMatches) + '\'' +
                 ", attributes=" + attributes +
                 ", RecursiveTypes=" + dependantTypes +
                 '}';

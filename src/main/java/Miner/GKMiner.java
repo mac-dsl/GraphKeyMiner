@@ -6,7 +6,6 @@ import Lattice.Lattice;
 import Summary.SummaryGraph;
 import Util.Config;
 import Util.Helper;
-import org.apache.jena.tdb.store.Hash;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -45,7 +44,7 @@ public class GKMiner {
         CandidateGKey gkey=lattice.next();
         while (gkey!=null)
         {
-            if(isAGraphkey(gkey))
+            if(!gkey.isPruned() && isAGraphkey(gkey))
             {
                 if(!allGKeys.containsKey(type))
                     allGKeys.put(type, new ArrayList<>());
@@ -88,6 +87,8 @@ public class GKMiner {
                     }
                 }
             }
+            gkey.setInducedEntities(numberOfInducedNodes);
+            gkey.setTotalNumberOfMatches(summaryGraph.getSummaryVertex(gkey.getMainType()).getCount());
             if((numberOfInducedNodes/summaryGraph.getSummaryVertex(gkey.getMainType()).getCount())<delta)
             {
                 lattice.prune(gkey);
@@ -184,5 +185,4 @@ public class GKMiner {
             Helper.printWithTime("Miner (IsAGkey for candidate ["+gkey.getMainType()+"] of size [" +(gkey.getDependantTypes().size() + gkey.getAttributes().size()) + "] ): ");
         return isGKey;
     }
-
 }
