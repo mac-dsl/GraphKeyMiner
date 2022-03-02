@@ -2,7 +2,7 @@ package Summary;
 
 import Infra.*;
 import Util.Config;
-import Util.Hammer;
+import Util.Helper;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 
@@ -24,18 +24,18 @@ public class SummaryGraph {
 
     public void summary()
     {
-        long startTime=System.currentTimeMillis();
+        Helper.setTemporaryTimer();
         addVertices();
-        Hammer.printWithTime("Summary Graph (add vertices time): ", System.currentTimeMillis()-startTime);
-        startTime=System.currentTimeMillis();
+        Helper.printWithTime("Summary Graph (add vertices time): ");
+        Helper.setTemporaryTimer();
         addEdges();
-        Hammer.printWithTime("Summary Graph (add edges time): ", System.currentTimeMillis()-startTime);
-        startTime=System.currentTimeMillis();
+        Helper.printWithTime("Summary Graph (add edges time): ");
+        Helper.setTemporaryTimer();
         addAttributes();
-        Hammer.printWithTime("Summary Graph (add attributes time): ", System.currentTimeMillis()-startTime);
-        startTime=System.currentTimeMillis();
+        Helper.printWithTime("Summary Graph (add attributes time): ");
+        Helper.setTemporaryTimer();
         findUniquenessOfAttributes();
-        Hammer.printWithTime("Summary Graph (fine uniqueness time): ", System.currentTimeMillis()-startTime);
+        Helper.printWithTime("Summary Graph (fine uniqueness time): ");
     }
 
     public Graph<SummaryVertex, RelationshipEdge> getSummaryGraph() {
