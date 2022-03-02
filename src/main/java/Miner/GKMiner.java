@@ -5,6 +5,7 @@ import Infra.*;
 import Lattice.Lattice;
 import Summary.SummaryGraph;
 import Util.Config;
+import Util.Helper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,9 +31,12 @@ public class GKMiner {
         this.type=type;
         this.summaryGraph=summaryGraph;
         this.allGKeys=new HashMap<>();
-        this.lattice=new Lattice(summaryGraph,type,delta,k);
         this.dependencyGraph = dependencyGraph;
+
+        Helper.setTemporaryTimer();
+        this.lattice=new Lattice(summaryGraph,type,delta,k);
         lattice.createLattice();
+        Helper.printWithTime("Miner (Lattice creation time): ");
     }
 
     public void mine()
@@ -57,8 +61,8 @@ public class GKMiner {
 
     private boolean isAGraphkey(CandidateGKey gkey)
     {
+        Helper.setTemporaryTimer();
         boolean isGKey=true;
-
         if(gkey.getDependantTypes().isEmpty()) // Constant GKey
         {
             HashSet<String> attributeNames = gkey
@@ -106,6 +110,7 @@ public class GKMiner {
                     }
                     else
                     {
+                        System.out.println("Recursive call for gkey:" + gkey.toString());
                         GKMiner recursiveMiner=new GKMiner(dataGraph,summaryGraph,dependencyGraph,node.getNodeName(),delta, (k-gkey.getAttributes().size() - gkey.getDependantTypes().size()));
                         recursiveMiner.mine();
                         if(!allGKeys.containsKey(node.getNodeName()))
@@ -166,6 +171,7 @@ public class GKMiner {
                 }
             }
         }
+        Helper.printWithTime("Miner (IsAGkey for candidate of size " +(gkey.getDependantTypes().size() + gkey.getAttributes().size()) + "): ");
         return isGKey;
     }
 
