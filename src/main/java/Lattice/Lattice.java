@@ -27,6 +27,7 @@ public class Lattice {
         this.type=type;
         this.k=k;
         allCandidates=new HashMap<>();
+        availableCandidates = new ArrayList<>();
     }
 
     public void createLattice()

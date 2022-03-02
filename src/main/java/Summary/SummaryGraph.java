@@ -1,6 +1,8 @@
 package Summary;
 
 import Infra.*;
+import Util.Config;
+import Util.Hammer;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 
@@ -20,13 +22,20 @@ public class SummaryGraph {
         this.dataGraph=dataGraph;
     }
 
-
     public void summary()
     {
+        long startTime=System.currentTimeMillis();
         addVertices();
+        Hammer.printWithTime("Summary Graph (add vertices time): ", System.currentTimeMillis()-startTime);
+        startTime=System.currentTimeMillis();
         addEdges();
+        Hammer.printWithTime("Summary Graph (add edges time): ", System.currentTimeMillis()-startTime);
+        startTime=System.currentTimeMillis();
         addAttributes();
+        Hammer.printWithTime("Summary Graph (add attributes time): ", System.currentTimeMillis()-startTime);
+        startTime=System.currentTimeMillis();
         findUniquenessOfAttributes();
+        Hammer.printWithTime("Summary Graph (fine uniqueness time): ", System.currentTimeMillis()-startTime);
     }
 
     public Graph<SummaryVertex, RelationshipEdge> getSummaryGraph() {
@@ -38,17 +47,22 @@ public class SummaryGraph {
         return nodeMap.getOrDefault(type,null);
     }
 
+    public void saveToFile(String path)
+    {
+
+    }
+
     private void addVertices()
     {
         int id=1;
-        for (Vertex v:dataGraph.getGraph().vertexSet()) {
-            DataVertex d_v=(DataVertex) v;
-            for (String type:d_v.getTypes()) {
+        for (DataVertex v:dataGraph.getGraph().vertexSet()) {
+            for (String type: v.getTypes()) {
                 if(!nodeMap.containsKey(type))
                 {
                     SummaryVertex summaryVertex=new SummaryVertex(id++,type);
                     summaryVertex.incrementCount();
                     summaryGraph.addVertex(summaryVertex);
+                    nodeMap.put(type,summaryVertex);
                 }
                 else
                 {
@@ -56,15 +70,16 @@ public class SummaryGraph {
                 }
             }
         }
+        if(Config.debug)
+            System.out.println("Number of nodes in the Summary Graph: " + summaryGraph.vertexSet().size());
     }
 
     private void addAttributes()
     {
-        for (Vertex v:dataGraph.getGraph().vertexSet()) {
-            DataVertex d_v=(DataVertex) v;
-            for (String type:d_v.getTypes()) {
+        for (DataVertex v:dataGraph.getGraph().vertexSet()) {
+            for (String type: v.getTypes()) {
                 SummaryVertex summaryVertex = nodeMap.get(type);
-                for (Attribute attr:d_v.getAllAttributesList()) {
+                for (Attribute attr: v.getAllAttributesList()) {
                     Attribute summaryAttr = summaryVertex.getAttributeByName(attr.getAttrName());
                     if(summaryAttr!=null)
                     {
@@ -84,25 +99,34 @@ public class SummaryGraph {
     {
         for (String type:nodeMap.keySet()) {
             HashMap<String,HashMap<String, HashSet<String>>> valueMap=new HashMap<>();
-            for (Vertex v:dataGraph.getGraph().vertexSet()) {
-                DataVertex dataVertex = (DataVertex) v;
-                if (dataVertex.getTypes().contains(type)) {
-                    for (Attribute attr:dataVertex.getAllAttributesList()) {
+            for (DataVertex v:dataGraph.getGraph().vertexSet()) {
+                if (v.getTypes().contains(type)) {
+                    for (Attribute attr: v.getAllAttributesList()) {
                         if(!valueMap.containsKey(attr.getAttrName()))
                             valueMap.put(attr.getAttrName(),new HashMap<>());
                         if(!valueMap.get(attr.getAttrName()).containsKey(attr.getAttrValue()))
                             valueMap.get(attr.getAttrName()).put(attr.getAttrValue(), new HashSet<>());
-                        valueMap.get(attr.getAttrName()).get(attr.getAttrValue()).add(dataVertex.getVertexURI());
+                        valueMap.get(attr.getAttrName()).get(attr.getAttrValue()).add(v.getVertexURI());
                     }
                 }
             }
+//            for (String attributeName:valueMap.keySet()) {
+//                for (String attributeValue:valueMap.get(attributeName).keySet()) {
+//                    if(valueMap.get(attributeName).get(attributeValue).size()==1)
+//                    {
+//                        dataGraph.getNode(valueMap.get(attributeName).get(attributeValue).iterator().next()).addUniqueness(attributeName);
+//                    }
+//                }
+//            }
             for (String attributeName:valueMap.keySet()) {
-                for (String attributeValue:valueMap.get(attributeName).keySet()) {
-                    if(valueMap.get(attributeName).get(attributeValue).size()==1)
-                    {
-                        ((DataVertex)dataGraph.getNode(valueMap.get(attributeName).get(attributeValue).iterator().next())).addUniqueness(attributeName);
-                    }
-                }
+                valueMap
+                        .get(attributeName)
+                        .keySet()
+                        .stream()
+                        .filter(attributeValue -> valueMap.get(attributeName).get(attributeValue).size() == 1)
+                        .forEach(attributeValue -> dataGraph
+                                .getNode(valueMap.get(attributeName).get(attributeValue).iterator().next())
+                                .addUniqueness(attributeName));
             }
         }
     }
@@ -116,9 +140,13 @@ public class SummaryGraph {
             for (String srcType:src.getTypes())
             {
                 SummaryVertex summarySrc = nodeMap.get(srcType);
+                if (summarySrc == null)
+                    System.out.println("No node exists for the source type: " + srcType);
                 for (String dstType:dst.getTypes())
                 {
                     SummaryVertex summaryDst = nodeMap.get(dstType);
+                    if (summaryDst == null)
+                        System.out.println("No node exists for the destination type: " + dstType);
                     boolean edgeExist=false;
                     for (RelationshipEdge summaryEdge:summaryGraph.outgoingEdgesOf(summarySrc))
                     {
@@ -135,5 +163,6 @@ public class SummaryGraph {
                 }
             }
         }
+        System.out.println("Done. Nodes: " + summaryGraph.vertexSet().size() + ",  Edges: " +summaryGraph.edgeSet().size());
     }
 }

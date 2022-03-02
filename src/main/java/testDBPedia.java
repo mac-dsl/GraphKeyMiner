@@ -4,6 +4,7 @@ import Loader.DBPediaLoader;
 import Miner.GKMiner;
 import Summary.SummaryGraph;
 import Util.Config;
+import Util.Hammer;
 
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -32,13 +33,13 @@ public class testDBPedia {
         System.out.println("Loading the dataset.");
         long startTime=System.currentTimeMillis();
         DBPediaLoader dbpedia = new DBPediaLoader(Config.typesPaths, Config.dataPaths);
-        printWithTime("Loading time: ", System.currentTimeMillis()-startTime);
+        Hammer.printWithTime("Loading time: ", System.currentTimeMillis()-startTime);
 
-        System.out.println("Creating summary graph.");
+        System.out.println("Creating Summary Graph.");
         startTime=System.currentTimeMillis();
         SummaryGraph summaryGraph=new SummaryGraph(dbpedia.getGraph());
         summaryGraph.summary();
-        printWithTime("Summary graph time: ", System.currentTimeMillis()-startTime);
+        Hammer.printWithTime("Summary Graph (total time): ", System.currentTimeMillis()-startTime);
 
         DependencyGraph dependencyGraph = new DependencyGraph();
 
@@ -48,7 +49,7 @@ public class testDBPedia {
         GKMiner miner = new GKMiner(dbpedia.getGraph(), summaryGraph,dependencyGraph,Config.type,Config.delta,Config.k);
         miner.mine();
 
-        printWithTime("Mining time: ", System.currentTimeMillis()-startTime);
+        Hammer.printWithTime("Mining time: ", System.currentTimeMillis()-startTime);
 
         if(Config.saveKeys)
         {
@@ -56,14 +57,7 @@ public class testDBPedia {
             saveGKeys(Config.type,gKeys);
         }
 
-        printWithTime("Total wall clock time: ", System.currentTimeMillis()-wallClockStart);
-    }
-
-    private static void printWithTime(String message, long runTimeInMS)
-    {
-        System.out.println(message + " time: " + runTimeInMS + "(ms) ** " +
-                TimeUnit.MILLISECONDS.toSeconds(runTimeInMS) + "(sec) ** " +
-                TimeUnit.MILLISECONDS.toMinutes(runTimeInMS) +  "(min)");
+        Hammer.printWithTime("Total wall clock time: ", System.currentTimeMillis()-wallClockStart);
     }
 
     private static void saveGKeys(String path, HashMap<String, ArrayList<CandidateGKey>> gKeys)
