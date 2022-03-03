@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Scanner;
 
 public class Config {
@@ -34,7 +35,7 @@ public class Config {
                      -d <dataFile>
                      -k <integer> // Maximum size of the GKey
                      -delta <double> // Minimum coverage threshold of the GKey
-                     -type <String> // Type of the center node
+                     -types List<names> // List of types for the center nodes. example: type1,type2,type3
                      -optimizedLoadingBasedOnTypes <true-false> // load based on specific types?
                      -debug <true-false> // print details of matching
                      -saveKeys <true-false> // Save the mined GKeys
@@ -67,7 +68,7 @@ public class Config {
                     case "-d" -> dataPaths.add(conf[1]);
                     case "-k" -> k = Integer.parseInt(conf[1]);
                     case "-delta" -> delta = Double.parseDouble(conf[1]);
-                    case "-type" -> types.add(conf[1]);
+                    case "-types" -> types.addAll(List.of(conf[1].split(",")));
                     case "-optimizedloadingbasedontypes" -> optimizedLoadingBasedOnTypes = Boolean.parseBoolean(conf[1]);
                     case "-debug" -> debug = Boolean.parseBoolean(conf[1]);
                     case "-savekeys" -> saveKeys = Boolean.parseBoolean(conf[1]);
