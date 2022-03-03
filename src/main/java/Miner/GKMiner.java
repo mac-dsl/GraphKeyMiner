@@ -24,6 +24,8 @@ public class GKMiner {
 
     public GKMiner(VF2DataGraph dataGraph, SummaryGraph summaryGraph, DependencyGraph dependencyGraph, HashMap<String, ArrayList<CandidateGKey>> allGKeys, String type, double delta, int k, boolean originalType)
     {
+        if(Config.debug)
+            System.out.println("GKMiner constructor: type:" + type  + ", k = " + k);
         this.dataGraph=dataGraph;
         this.delta=delta;
         this.k=k;

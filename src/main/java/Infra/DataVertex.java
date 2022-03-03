@@ -18,7 +18,7 @@ public class DataVertex extends Vertex implements Serializable {
     public DataVertex(String uri, String type) {
         super(type.toLowerCase());
         this.vertexURI=uri.toLowerCase();
-        this.addAttribute("uri",vertexURI);
+        //this.addAttribute("uri",vertexURI);
         uniqueness =new HashSet<>();
     }
 

@@ -34,6 +34,9 @@ public class testDBPedia {
         startTime=System.currentTimeMillis();
         SummaryGraph summaryGraph=new SummaryGraph(dbpedia.getGraph());
         summaryGraph.summary();
+        if(Config.preprocessOptimization)
+            summaryGraph.findUniqueness();
+        summaryGraph.saveToFile();
         Helper.printWithTime("Summary Graph (total time): ", System.currentTimeMillis()-startTime);
 
         DependencyGraph dependencyGraph = new DependencyGraph();

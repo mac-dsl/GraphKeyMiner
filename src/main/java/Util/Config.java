@@ -21,6 +21,7 @@ public class Config {
     public static boolean optimizedLoadingBasedOnTypes =false;
     public static boolean saveKeys=true;
     public static boolean debug =false;
+    public static boolean preprocessOptimization = true;
 
     public static void parse(String input) throws FileNotFoundException {
         if(input.equals("--help")) {
@@ -61,6 +62,7 @@ public class Config {
                     case "-save" -> saveKeys = Boolean.parseBoolean(conf[1]);
                     case "-language" -> language = conf[1];
                     case "-dataset" -> dataset = conf[1];
+                    case "-preopt" -> preprocessOptimization = Boolean.parseBoolean(conf[1]);
                 }
             }
         } catch (FileNotFoundException e) {

@@ -56,4 +56,20 @@ public class Helper {
         }
     }
 
+    public static void saveToFile(String path, StringBuilder content)
+    {
+        try {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+            LocalDateTime now = LocalDateTime.now();
+            String time = dtf.format(now);
+            FileWriter file = new FileWriter("%s_%s.txt".formatted(path, time));
+            file.write(content.toString());
+            file.close();
+            System.out.println("Successfully wrote to the file: " + path);
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
 }

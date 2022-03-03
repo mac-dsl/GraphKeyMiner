@@ -33,6 +33,11 @@ public class SummaryGraph {
         Helper.setTemporaryTimer();
         addAttributes();
         Helper.printWithTime("Summary Graph (add attributes time): ");
+
+    }
+
+    public void findUniqueness()
+    {
         Helper.setTemporaryTimer();
         findUniquenessOfAttributes();
         Helper.printWithTime("Summary Graph (fine uniqueness time): ");
@@ -47,9 +52,26 @@ public class SummaryGraph {
         return nodeMap.getOrDefault(type,null);
     }
 
-    public void saveToFile(String path)
+    public void saveToFile()
     {
-
+        StringBuilder sb=new StringBuilder();
+        for (SummaryVertex v:nodeMap.values()) {
+            sb.append("v," + v.getId() + "," + v.getType() + "," + v.getCount() + ",");
+            for (Attribute attribute:v.getAllAttributesList()) {
+                sb.append(attribute.getAttrName() + "," + attribute.getCount() + ",");
+            }
+            if(sb. length() > 0)
+                sb. deleteCharAt(sb. length() - 1);
+            sb.append("\n");
+        }
+        summaryGraph.edgeSet()
+                .stream()
+                .map(edge -> "e,"
+                        + ((SummaryVertex) edge.getSource()).getId() + ","
+                        + ((SummaryVertex) edge.getTarget()).getId() + ","
+                        + edge.getCount() + "\n")
+                .forEach(sb::append);
+        Helper.saveToFile("summaryGraph",sb);
     }
 
     private void addVertices()
@@ -140,13 +162,9 @@ public class SummaryGraph {
             for (String srcType:src.getTypes())
             {
                 SummaryVertex summarySrc = nodeMap.get(srcType);
-                if (summarySrc == null)
-                    System.out.println("No node exists for the source type: " + srcType);
                 for (String dstType:dst.getTypes())
                 {
                     SummaryVertex summaryDst = nodeMap.get(dstType);
-                    if (summaryDst == null)
-                        System.out.println("No node exists for the destination type: " + dstType);
                     boolean edgeExist=false;
                     for (RelationshipEdge summaryEdge:summaryGraph.outgoingEdgesOf(summarySrc))
                     {
