@@ -123,13 +123,17 @@ public class SummaryGraph {
         boolean exist;
         HashSet<Integer> nodesThatExist=new HashSet<>();
         for (SummaryVertex v:nodeMap.values()) {
-            String temp ="V," + v.getId() + "," + v.getType() + "," + v.getCount() + ",";
+            StringBuilder temp = new StringBuilder("V" + "," + v.getType() + "," + v.getCount() + ",");
             exist=false;
             for (Attribute attribute:v.getAllAttributesList()) {
                 if((attribute.getCount()/(double) v.getCount())>delta)
                 {
                     exist=true;
-                    temp+=attribute.getAttrName() + "," + attribute.getCount() + ",";
+                    temp.append(" [")
+                            .append(attribute.getAttrName())
+                            .append(",")
+                            .append((int) attribute.getCount())
+                            .append("],");
                 }
             }
             if(exist)
@@ -149,12 +153,15 @@ public class SummaryGraph {
                 {
                     sb.append("E,")
                             .append(src.getType())
-                            .append(",")
-                            .append(dst.getType())
-                            .append(",")
+                            .append("(")
+                            .append(src.getCount())
+                            .append(") ---- ")
                             .append(edge.getLabel())
-                            .append(",")
-                            .append(edge.getCount()).append("\n");
+                            .append("(")
+                            .append((int)edge.getCount())
+                            .append(") ----> ")
+                            .append(dst.getType())
+                            .append("\n");
                 }
             }
         }
