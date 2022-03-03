@@ -3,6 +3,7 @@ package Util;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
 
 public class Config {
@@ -16,7 +17,7 @@ public class Config {
     public static int entityID=1;
     public static double delta;
     public static int k;
-    public static String type;
+    public static HashSet<String> types=new HashSet<>();
 
     public static boolean optimizedLoadingBasedOnTypes =false;
     public static boolean saveKeys=true;
@@ -36,7 +37,7 @@ public class Config {
                      -type <String> // Type of the center node
                      -optimizedLoadingBasedOnTypes <true-false> // load based on specific types?
                      -debug <true-false> // print details of matching
-                     -save <true-false> // Save the mined GKeys
+                     -saveKeys <true-false> // Save the mined GKeys
                      -language <language name> // Names like "N-Triples", "TURTLE", "RDF/XML"
                      -dataset <dataset name> // Options: imdb (default), dbpedia, synthetic
                      -preprocessOptimization <true-false> // find uniqueness of attributes in the pre-process
@@ -66,10 +67,10 @@ public class Config {
                     case "-d" -> dataPaths.add(conf[1]);
                     case "-k" -> k = Integer.parseInt(conf[1]);
                     case "-delta" -> delta = Double.parseDouble(conf[1]);
-                    case "-type" -> type = conf[1];
+                    case "-type" -> types.add(conf[1]);
                     case "-optimizedloadingbasedontypes" -> optimizedLoadingBasedOnTypes = Boolean.parseBoolean(conf[1]);
                     case "-debug" -> debug = Boolean.parseBoolean(conf[1]);
-                    case "-save" -> saveKeys = Boolean.parseBoolean(conf[1]);
+                    case "-savekeys" -> saveKeys = Boolean.parseBoolean(conf[1]);
                     case "-language" -> language = conf[1];
                     case "-dataset" -> dataset = conf[1];
                     case "-preprocessoptimization" -> preprocessOptimization = Boolean.parseBoolean(conf[1]);

@@ -53,6 +53,11 @@ public class VF2DataGraph implements Serializable {
         graph.addEdge(v1,v2,edge);
     }
 
+    public void resetGraph()
+    {
+        this.getGraph().vertexSet().forEach(DataVertex::reset);
+    }
+
     public void removeEdge(DataVertex v1, DataVertex v2, RelationshipEdge edge)
     {
         for (RelationshipEdge e:graph.outgoingEdgesOf(v1)) {

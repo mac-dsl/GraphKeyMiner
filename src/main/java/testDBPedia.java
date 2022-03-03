@@ -43,20 +43,20 @@ public class testDBPedia {
             summaryGraph.saveToFile(Config.delta);
         Helper.printWithTime("Summary Graph (total time): ", System.currentTimeMillis()-startTime);
 
-        DependencyGraph dependencyGraph = new DependencyGraph();
+        for (String type:Config.types) {
+            DependencyGraph dependencyGraph = new DependencyGraph();
 
-        System.out.println("Mining graph keys.");
-        startTime=System.currentTimeMillis();
+            System.out.println("Mining graph keys for type: " + type);
+            startTime=System.currentTimeMillis();
+            HashMap<String, ArrayList<CandidateGKey>> gKeys=new HashMap<>();
+            GKMiner miner = new GKMiner(dbpedia.getGraph(), summaryGraph,dependencyGraph,gKeys,type,Config.delta,Config.k, true);
+            miner.mine();
+            Helper.printWithTime("Mining time: ", System.currentTimeMillis()-startTime);
 
-        HashMap<String, ArrayList<CandidateGKey>> gKeys=new HashMap<>();
-        GKMiner miner = new GKMiner(dbpedia.getGraph(), summaryGraph,dependencyGraph,gKeys,Config.type,Config.delta,Config.k, true);
-        miner.mine();
+            if(Config.saveKeys)
+                Helper.saveGKeys(type + "_" + Config.delta,gKeys);
 
-        Helper.printWithTime("Mining time: ", System.currentTimeMillis()-startTime);
-
-        if(Config.saveKeys)
-        {
-            Helper.saveGKeys(Config.type,gKeys);
+            dbpedia.getGraph().resetGraph();
         }
 
         Helper.printWithTime("Total wall clock time: ", System.currentTimeMillis()-wallClockStart);

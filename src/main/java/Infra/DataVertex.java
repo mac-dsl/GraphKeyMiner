@@ -51,6 +51,12 @@ public class DataVertex extends Vertex implements Serializable {
         return true;
     }
 
+    public void reset()
+    {
+        uniqueness.removeIf(unique -> unique.size() > 1);
+        this.entityID = -1;
+    }
+
     public boolean isUnique(HashSet<String> attributeNames)
     {
         return uniqueness
