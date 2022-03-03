@@ -56,7 +56,7 @@ public class SummaryGraph {
     {
         StringBuilder sb=new StringBuilder();
         for (SummaryVertex v:nodeMap.values()) {
-            sb.append("v," + v.getId() + "," + v.getType() + "," + v.getCount() + ",");
+            sb.append("V," + v.getId() + "," + v.getType() + "," + v.getCount() + ",");
             for (Attribute attribute:v.getAllAttributesList()) {
                 sb.append(attribute.getAttrName() + "," + attribute.getCount() + ",");
             }
@@ -66,12 +66,54 @@ public class SummaryGraph {
         }
         summaryGraph.edgeSet()
                 .stream()
-                .map(edge -> "e,"
+                .map(edge -> "E,"
                         + ((SummaryVertex) edge.getSource()).getId() + ","
                         + ((SummaryVertex) edge.getTarget()).getId() + ","
                         + edge.getCount() + "\n")
                 .forEach(sb::append);
         Helper.saveToFile("summaryGraph",sb);
+    }
+
+    public void saveToFile(double delta)
+    {
+        StringBuilder sb=new StringBuilder();
+        boolean exist;
+        HashSet<Integer> nodesThatExist=new HashSet<>();
+        for (SummaryVertex v:nodeMap.values()) {
+            String temp ="V," + v.getId() + "," + v.getType() + "," + v.getCount() + ",";
+            exist=false;
+            for (Attribute attribute:v.getAllAttributesList()) {
+                if((attribute.getCount()/(double) v.getCount())>delta)
+                {
+                    exist=true;
+                    temp+=attribute.getAttrName() + "," + attribute.getCount() + ",";
+                }
+            }
+            if(exist)
+            {
+                sb.append(temp);
+                sb. deleteCharAt(sb. length() - 1);
+                nodesThatExist.add(v.getId());
+            }
+            sb.append("\n");
+        }
+        for (RelationshipEdge edge:summaryGraph.edgeSet()) {
+            SummaryVertex src= (SummaryVertex) edge.getSource();
+            SummaryVertex dst= (SummaryVertex) edge.getTarget();
+            if(nodesThatExist.contains(src.getId())  && nodesThatExist.contains(dst.getId()))
+            {
+                if((edge.getCount()/(double)src.getCount())>delta)
+                {
+                    sb.append("E,")
+                            .append(src.getType())
+                            .append(",")
+                            .append(dst.getType())
+                            .append(",")
+                            .append(edge.getCount()).append("\n");
+                }
+            }
+        }
+        Helper.saveToFile("summaryGraph[" + delta + "]",sb);
     }
 
     private void addVertices()

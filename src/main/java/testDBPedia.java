@@ -36,7 +36,10 @@ public class testDBPedia {
         summaryGraph.summary();
         if(Config.preprocessOptimization)
             summaryGraph.findUniqueness();
-        summaryGraph.saveToFile();
+        if(Config.saveSummaryGraph)
+            summaryGraph.saveToFile();
+        if(Config.saveSummaryGraphBasedOnDelta)
+            summaryGraph.saveToFile(Config.delta);
         Helper.printWithTime("Summary Graph (total time): ", System.currentTimeMillis()-startTime);
 
         DependencyGraph dependencyGraph = new DependencyGraph();

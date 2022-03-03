@@ -22,6 +22,8 @@ public class Config {
     public static boolean saveKeys=true;
     public static boolean debug =false;
     public static boolean preprocessOptimization = true;
+    public static boolean saveSummaryGraph = false;
+    public static boolean saveSummaryGraphBasedOnDelta = true;
 
     public static void parse(String input) throws FileNotFoundException {
         if(input.equals("--help")) {
