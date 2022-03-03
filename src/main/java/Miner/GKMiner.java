@@ -110,7 +110,7 @@ public class GKMiner {
                 if(!allGKeys.containsKey(node.getNodeName()))
                 {
                     dependencyGraph.addEdge(type,node.getNodeName());
-                    if(dependencyGraph.isCyclic())
+                    if(type.equals(node.getNodeName()) || dependencyGraph.isCyclic())
                     {
                         dependencyGraph.removeEdge(type,node.getNodeName());
                         toBeRemoved.add(node.getNodeName());
