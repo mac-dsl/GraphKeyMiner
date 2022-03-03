@@ -40,23 +40,26 @@ public class testDBPedia {
         if(Config.saveSummaryGraph)
             summaryGraph.saveToFile();
         if(Config.saveSummaryGraphBasedOnDelta)
-            summaryGraph.saveToFile(Config.delta);
+            Config.delta.forEach(summaryGraph::saveToFile);
+
         Helper.printWithTime("Summary Graph (total time): ", System.currentTimeMillis()-startTime);
 
         for (String type:Config.types) {
-            DependencyGraph dependencyGraph = new DependencyGraph();
+            for (double delta:Config.delta) {
+                DependencyGraph dependencyGraph = new DependencyGraph();
 
-            System.out.println("Mining graph keys for type: " + type);
-            startTime=System.currentTimeMillis();
-            HashMap<String, ArrayList<CandidateGKey>> gKeys=new HashMap<>();
-            GKMiner miner = new GKMiner(dbpedia.getGraph(), summaryGraph,dependencyGraph,gKeys,type,Config.delta,Config.k, true);
-            miner.mine();
-            Helper.printWithTime("Mining time: ", System.currentTimeMillis()-startTime);
+                System.out.println("Mining graph keys for type: " + type);
+                startTime=System.currentTimeMillis();
+                HashMap<String, ArrayList<CandidateGKey>> gKeys=new HashMap<>();
+                GKMiner miner = new GKMiner(dbpedia.getGraph(), summaryGraph,dependencyGraph,gKeys,type,delta,Config.k, true);
+                miner.mine();
+                Helper.printWithTime("Mining time: ", System.currentTimeMillis()-startTime);
 
-            if(Config.saveKeys)
-                Helper.saveGKeys(type + "_" + Config.delta,gKeys);
+                if(Config.saveKeys)
+                    Helper.saveGKeys(type + "_" + Config.delta,gKeys);
 
-            dbpedia.getGraph().resetGraph();
+                dbpedia.getGraph().resetGraph();
+            }
         }
 
         Helper.printWithTime("Total wall clock time: ", System.currentTimeMillis()-wallClockStart);

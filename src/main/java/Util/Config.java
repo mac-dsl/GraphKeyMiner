@@ -2,10 +2,7 @@ package Util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Config {
 
@@ -16,7 +13,7 @@ public class Config {
     public static String dataset="imdb";
 
     public static int entityID=1;
-    public static double delta;
+    public static HashSet<Double> delta= new HashSet<>();
     public static int k;
     public static HashSet<String> types=new HashSet<>();
 
@@ -34,8 +31,8 @@ public class Config {
                      -t <typeFile>
                      -d <dataFile>
                      -k <integer> // Maximum size of the GKey
-                     -delta <double> // Minimum coverage threshold of the GKey
-                     -types List<names> // List of types for the center nodes. example: type1,type2,type3
+                     -delta List<double> // List of double values for minimum coverage threshold of the GKey (run multiple times). example: 0.1,0.2,0.3
+                     -types List<names> // List of types for the center nodes (run multiple times). example: type1,type2,type3
                      -optimizedLoadingBasedOnTypes <true-false> // load based on specific types?
                      -debug <true-false> // print details of matching
                      -saveKeys <true-false> // Save the mined GKeys
@@ -67,7 +64,7 @@ public class Config {
                     case "-t" -> typesPaths.add(conf[1]);
                     case "-d" -> dataPaths.add(conf[1]);
                     case "-k" -> k = Integer.parseInt(conf[1]);
-                    case "-delta" -> delta = Double.parseDouble(conf[1]);
+                    case "-delta" -> Arrays.stream(conf[1].split(",")).forEach(val -> delta.add(Double.valueOf(val)));
                     case "-types" -> types.addAll(List.of(conf[1].split(",")));
                     case "-optimizedloadingbasedontypes" -> optimizedLoadingBasedOnTypes = Boolean.parseBoolean(conf[1]);
                     case "-debug" -> debug = Boolean.parseBoolean(conf[1]);
