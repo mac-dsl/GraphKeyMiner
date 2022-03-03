@@ -75,8 +75,8 @@ public class Config {
                     case "-language" -> language = conf[1];
                     case "-dataset" -> dataset = conf[1];
                     case "-preprocessoptimization" -> preprocessOptimization = Boolean.parseBoolean(conf[1]);
-                    case "-saveSummaryGraph" -> saveSummaryGraph = Boolean.parseBoolean(conf[1]);
-                    case "-saveSummaryGraphBasedOnDelta" -> saveSummaryGraphBasedOnDelta = Boolean.parseBoolean(conf[1]);
+                    case "-savesummarygraph" -> saveSummaryGraph = Boolean.parseBoolean(conf[1]);
+                    case "-savesummarygraphbasedondelta" -> saveSummaryGraphBasedOnDelta = Boolean.parseBoolean(conf[1]);
                 }
             }
         } catch (FileNotFoundException e) {
