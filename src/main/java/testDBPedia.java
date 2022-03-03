@@ -41,14 +41,14 @@ public class testDBPedia {
         System.out.println("Mining graph keys.");
         startTime=System.currentTimeMillis();
 
-        GKMiner miner = new GKMiner(dbpedia.getGraph(), summaryGraph,dependencyGraph,Config.type,Config.delta,Config.k, true);
+        HashMap<String, ArrayList<CandidateGKey>> gKeys=new HashMap<>();
+        GKMiner miner = new GKMiner(dbpedia.getGraph(), summaryGraph,dependencyGraph,gKeys,Config.type,Config.delta,Config.k, true);
         miner.mine();
 
         Helper.printWithTime("Mining time: ", System.currentTimeMillis()-startTime);
 
         if(Config.saveKeys)
         {
-            HashMap<String, ArrayList<CandidateGKey>> gKeys = miner.getAllGKeys();
             Helper.saveGKeys(Config.type,gKeys);
         }
 

@@ -22,14 +22,14 @@ public class GKMiner {
     private DependencyGraph dependencyGraph;
     private boolean originalType;
 
-    public GKMiner(VF2DataGraph dataGraph, SummaryGraph summaryGraph, DependencyGraph dependencyGraph, String type, double delta, int k, boolean originalType)
+    public GKMiner(VF2DataGraph dataGraph, SummaryGraph summaryGraph, DependencyGraph dependencyGraph, HashMap<String, ArrayList<CandidateGKey>> allGKeys, String type, double delta, int k, boolean originalType)
     {
         this.dataGraph=dataGraph;
         this.delta=delta;
         this.k=k;
         this.type=type;
         this.summaryGraph=summaryGraph;
-        this.allGKeys=new HashMap<>();
+        this.allGKeys=allGKeys;
         this.dependencyGraph = dependencyGraph;
         this.originalType = originalType;
 
@@ -118,7 +118,7 @@ public class GKMiner {
                     {
                         if(Config.debug)
                             System.out.println("Recursive call from "+gkey.getMainType()+" for "+node.getNodeName()+" - Current candidate: " + gkey);
-                        GKMiner recursiveMiner=new GKMiner(dataGraph,summaryGraph,dependencyGraph,node.getNodeName(),delta, (k - gkey.getAttributes().size() - gkey.getDependantTypes().size()),false);
+                        GKMiner recursiveMiner=new GKMiner(dataGraph,summaryGraph,dependencyGraph,allGKeys,node.getNodeName(),delta, (k - gkey.getAttributes().size() - gkey.getDependantTypes().size()),false);
                         recursiveMiner.mine();
                         if(!allGKeys.containsKey(node.getNodeName()))
                         {
