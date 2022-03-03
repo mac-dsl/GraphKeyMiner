@@ -182,7 +182,7 @@ public class GKMiner {
             }
         }
         if(Config.debug)
-            Helper.printWithTime("Miner (IsAGkey for candidate ["+gkey.getMainType()+"] of size [" +(gkey.getDependantTypes().size() + gkey.getAttributes().size()) + "] ): ");
+            Helper.printWithTime("Miner (IsAGkey = "+isGKey+" for candidate ["+gkey.getMainType()+"] of size [" +(gkey.getDependantTypes().size() + gkey.getAttributes().size()) + "] ): ");
         return isGKey;
     }
 }

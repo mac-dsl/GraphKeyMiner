@@ -28,13 +28,11 @@ public class CandidateNode {
     @Override
     public String toString() {
         if(candidateType.equals(CandidateType.ConstantNode))
-            return "Node{" +
-                    "AttributeName='" + nodeName + '\'' +
-                    '}';
+            return "'" + nodeName + '\'';
         else
-            return "Node{" +
-                    "NodeType='" + nodeName + '\'' +
-                    ", EdgeName='" + edgeName + '\'' +
+            return "{" +
+                    "Edge='" + edgeName + '\'' +
+                    " --> Type='" + nodeName + '\'' +
                     '}';
     }
 }

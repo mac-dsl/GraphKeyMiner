@@ -80,8 +80,8 @@ public class CandidateGKey {
     @Override
     public String toString() {
         return "GKey{" +
-                "mainType='" + mainType + '\'' +
-                "support='" + inducedEntities + "/" + totalNumberOfMatches + "= " + (inducedEntities/totalNumberOfMatches) + '\'' +
+                "Type='" + mainType + '\'' +
+                ", support='" + inducedEntities + "/" + totalNumberOfMatches + " = " + (inducedEntities/totalNumberOfMatches) + '\'' +
                 ", attributes=" + attributes +
                 ", RecursiveTypes=" + dependantTypes +
                 '}';
