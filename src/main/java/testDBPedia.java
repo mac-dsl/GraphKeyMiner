@@ -20,7 +20,8 @@ public class testDBPedia {
 
         System.out.println("Test GKMier algorithm for the DBPedia dataset");
 
-        Config.parse(args[0]);
+        if(!Config.parse(args[0]))
+            return;
 
         System.out.println(Arrays.toString(Config.dataPaths.toArray()));
         System.out.println(Arrays.toString(Config.typesPaths.toArray()));
