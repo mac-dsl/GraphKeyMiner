@@ -58,6 +58,11 @@ public class RelationshipEdge extends DefaultEdge {
         this.count=1;
     }
 
+    public RelationshipEdge(String label, double count) {
+        this.label = label.toLowerCase();
+        this.count=count;
+    }
+
     @Override
     public Vertex getTarget() {
         return (Vertex) super.getTarget();

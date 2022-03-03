@@ -6,6 +6,10 @@ import Util.Helper;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -52,6 +56,44 @@ public class SummaryGraph {
         return nodeMap.getOrDefault(type,null);
     }
 
+    public void loadFromFile(String path)
+    {
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            String line;
+            HashMap<Integer,String> mapNodeIDToType=new HashMap<>();
+            while ((line = br.readLine()) != null) {
+                if(line.startsWith("V"))
+                {
+                    String arr[] = line.split(",");
+                    if(arr.length>3)
+                    {
+                        SummaryVertex v=new SummaryVertex(Integer.parseInt(arr[1]),arr[2]);
+                        for(int i = 3;i< arr.length;i+=2)
+                        {
+                            Attribute attribute = new Attribute(arr[i],Integer.parseInt(arr[i+1]));
+                            v.addAttribute(attribute);
+                        }
+                        nodeMap.put(v.getType(),v);
+                        summaryGraph.addVertex(v);
+                        mapNodeIDToType.put(v.getId(),v.getType());
+                    }
+                }
+                else if(line.startsWith("E"))
+                {
+                    String arr[] = line.split(",");
+                    if(arr.length==5)
+                    {
+                        SummaryVertex src = nodeMap.get(mapNodeIDToType.get(Integer.parseInt(arr[1])));
+                        SummaryVertex dst = nodeMap.get(mapNodeIDToType.get(Integer.parseInt(arr[2])));
+                        summaryGraph.addEdge(src, dst, new RelationshipEdge(arr[3],Double.parseDouble(arr[4])));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void saveToFile()
     {
         StringBuilder sb=new StringBuilder();
@@ -69,6 +111,7 @@ public class SummaryGraph {
                 .map(edge -> "E,"
                         + ((SummaryVertex) edge.getSource()).getId() + ","
                         + ((SummaryVertex) edge.getTarget()).getId() + ","
+                        + edge.getLabel() + ","
                         + edge.getCount() + "\n")
                 .forEach(sb::append);
         Helper.saveToFile("summaryGraph",sb);
@@ -94,8 +137,8 @@ public class SummaryGraph {
                 sb.append(temp);
                 sb. deleteCharAt(sb. length() - 1);
                 nodesThatExist.add(v.getId());
+                sb.append("\n");
             }
-            sb.append("\n");
         }
         for (RelationshipEdge edge:summaryGraph.edgeSet()) {
             SummaryVertex src= (SummaryVertex) edge.getSource();
@@ -108,6 +151,8 @@ public class SummaryGraph {
                             .append(src.getType())
                             .append(",")
                             .append(dst.getType())
+                            .append(",")
+                            .append(edge.getLabel())
                             .append(",")
                             .append(edge.getCount()).append("\n");
                 }
