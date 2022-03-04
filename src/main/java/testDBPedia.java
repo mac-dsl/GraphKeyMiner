@@ -25,6 +25,10 @@ public class testDBPedia {
 
         System.out.println(Arrays.toString(Config.dataPaths.toArray()));
         System.out.println(Arrays.toString(Config.typesPaths.toArray()));
+        System.out.println(Arrays.toString(Config.delta.toArray()));
+        System.out.println(Arrays.toString(Config.types.toArray()));
+
+        HashMap<String,Long> runtimes = new HashMap<>();
 
         System.out.println("Loading the dataset.");
         long startTime=System.currentTimeMillis();
@@ -45,22 +49,25 @@ public class testDBPedia {
         Helper.printWithTime("Summary Graph (total time): ", System.currentTimeMillis()-startTime);
 
         for (String type:Config.types) {
+            runtimes.put(type, 0L);
             for (double delta:Config.delta) {
                 DependencyGraph dependencyGraph = new DependencyGraph();
 
-                System.out.println("Mining graph keys for type: " + type);
+                //System.out.println("Mining graph keys for type: " + type);
                 startTime=System.currentTimeMillis();
                 HashMap<String, ArrayList<CandidateGKey>> gKeys=new HashMap<>();
                 GKMiner miner = new GKMiner(dbpedia.getGraph(), summaryGraph,dependencyGraph,gKeys,type,delta,Config.k, true);
                 miner.mine();
-                Helper.printWithTime("Mining time: ", System.currentTimeMillis()-startTime);
+                runtimes.put(type,runtimes.get(type)+System.currentTimeMillis()-startTime);
+                Helper.printWithTime("Mining ("+type+","+delta+")", System.currentTimeMillis()-startTime);
 
                 if(Config.saveKeys)
-                    Helper.saveGKeys(type + "_" + Config.delta,gKeys);
+                    Helper.saveGKeys(type + "_" + delta,gKeys);
 
                 dbpedia.getGraph().resetGraph();
             }
         }
+        runtimes.keySet().forEach(type -> Helper.printWithTime("Type: " + type, runtimes.get(type)));
 
         Helper.printWithTime("Total wall clock time: ", System.currentTimeMillis()-wallClockStart);
     }

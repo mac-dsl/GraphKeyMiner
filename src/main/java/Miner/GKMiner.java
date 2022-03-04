@@ -25,7 +25,7 @@ public class GKMiner {
     public GKMiner(VF2DataGraph dataGraph, SummaryGraph summaryGraph, DependencyGraph dependencyGraph, HashMap<String, ArrayList<CandidateGKey>> allGKeys, String type, double delta, int k, boolean originalType)
     {
         if(Config.debug)
-            System.out.println("GKMiner constructor: type:" + type  + ", k = " + k);
+            System.out.println("GKMiner constructor, type:" + type  + ", k = " + k);
         this.dataGraph=dataGraph;
         this.delta=delta;
         this.k=k;
@@ -115,7 +115,7 @@ public class GKMiner {
                     else
                     {
                         if(Config.debug)
-                            System.out.println("Recursive call from "+gkey.getMainType()+" for "+node.getNodeName()+" - Current candidate: " + gkey);
+                            System.out.println("Recursive call from '"+gkey.getMainType()+"' for '"+node.getNodeName()+"' - Current candidate: " + gkey);
                         GKMiner recursiveMiner=new GKMiner(dataGraph,summaryGraph,dependencyGraph,allGKeys,node.getNodeName(),delta, (k - gkey.getAttributes().size() - gkey.getDependantTypes().size()),false);
                         recursiveMiner.mine();
                         if(!allGKeys.containsKey(node.getNodeName()))
@@ -180,7 +180,7 @@ public class GKMiner {
             }
         }
         if(Config.debug)
-            Helper.printWithTime("Miner (IsAGkey = "+isGKey+" for candidate ["+gkey.getMainType()+"] of size [" +(gkey.getDependantTypes().size() + gkey.getAttributes().size()) + "] ): ");
+            Helper.printWithTime("Miner.IsAGkey = "+isGKey+" for candidate ["+gkey.getMainType()+"] of size [" +(gkey.getDependantTypes().size() + gkey.getAttributes().size()) + "]), ");
         return isGKey;
     }
 }
