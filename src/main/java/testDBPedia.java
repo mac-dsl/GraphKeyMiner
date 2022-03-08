@@ -64,8 +64,9 @@ public class testDBPedia {
                 if(Config.saveKeys)
                     Helper.saveGKeys(type + "_" + delta,gKeys);
 
-                dbpedia.getGraph().resetGraph();
+                dbpedia.getGraph().softResetGraph();
             }
+            dbpedia.getGraph().hardResetGraph();
         }
         runtimes.keySet().forEach(type -> Helper.printWithTime("Type: " + type, runtimes.get(type)));
 
