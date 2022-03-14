@@ -64,7 +64,7 @@ public class testDBPedia {
                     miner.mine();
                     temp = System.currentTimeMillis()-startTime;
                     runtimes_basedOnTypes.put(type, runtimes_basedOnTypes.get(type) + temp);
-                    runtimes_basedOnDeltaAndK.put(delta+"_"+k, runtimes_basedOnTypes.get(delta+"_"+k) + temp);
+                    runtimes_basedOnDeltaAndK.put(delta+"_"+k, runtimes_basedOnDeltaAndK.get(delta+"_"+k) + temp);
                     Helper.printWithTime("Mining (" + type + "," + delta + "," + k + ")", temp);
 
                     if (Config.saveKeys)
