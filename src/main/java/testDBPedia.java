@@ -28,10 +28,11 @@ public class testDBPedia {
         System.out.println(Arrays.toString(Config.delta.toArray()));
         System.out.println(Arrays.toString(Config.types.toArray()));
 
-        HashMap<String,Long> runtimes = new HashMap<>();
+        HashMap<String,Long> runtimes_basedOnTypes = new HashMap<>();
+        HashMap<String,Long> runtimes_basedOnDeltaAndK = new HashMap<>();
 
         System.out.println("Loading the dataset.");
-        long startTime=System.currentTimeMillis();
+        long startTime=System.currentTimeMillis(),temp;
         DBPediaLoader dbpedia = new DBPediaLoader(Config.typesPaths, Config.dataPaths);
         Helper.printWithTime("Loading time: ", System.currentTimeMillis()-startTime);
 
@@ -49,26 +50,34 @@ public class testDBPedia {
         Helper.printWithTime("Summary Graph (total time): ", System.currentTimeMillis()-startTime);
 
         for (String type:Config.types) {
-            runtimes.put(type, 0L);
+            runtimes_basedOnTypes.put(type, 0L);
             for (double delta:Config.delta) {
-                DependencyGraph dependencyGraph = new DependencyGraph();
+                for (int k:Config.k) {
+                    if(!runtimes_basedOnDeltaAndK.containsKey(delta+"_"+k))
+                        runtimes_basedOnDeltaAndK.put(delta+"_"+k,0L);
+                    DependencyGraph dependencyGraph = new DependencyGraph();
 
-                //System.out.println("Mining graph keys for type: " + type);
-                startTime=System.currentTimeMillis();
-                HashMap<String, ArrayList<CandidateGKey>> gKeys=new HashMap<>();
-                GKMiner miner = new GKMiner(dbpedia.getGraph(), summaryGraph,dependencyGraph,gKeys,type,delta,Config.k, true);
-                miner.mine();
-                runtimes.put(type,runtimes.get(type)+System.currentTimeMillis()-startTime);
-                Helper.printWithTime("Mining ("+type+","+delta+")", System.currentTimeMillis()-startTime);
+                    //System.out.println("Mining graph keys for type: " + type);
+                    startTime = System.currentTimeMillis();
+                    HashMap<String, ArrayList<CandidateGKey>> gKeys = new HashMap<>();
+                    GKMiner miner = new GKMiner(dbpedia.getGraph(), summaryGraph, dependencyGraph, gKeys, type, delta, k, true);
+                    miner.mine();
+                    temp = System.currentTimeMillis()-startTime;
+                    runtimes_basedOnTypes.put(type, runtimes_basedOnTypes.get(type) + temp);
+                    runtimes_basedOnDeltaAndK.put(delta+"_"+k, runtimes_basedOnTypes.get(delta+"_"+k) + temp);
+                    Helper.printWithTime("Mining (" + type + "," + delta + "," + k + ")", temp);
 
-                if(Config.saveKeys)
-                    Helper.saveGKeys(type + "_" + delta,gKeys);
+                    if (Config.saveKeys)
+                        Helper.saveGKeys(type + "_" + delta + "_" + k, gKeys);
 
-                dbpedia.getGraph().softResetGraph();
+                    dbpedia.getGraph().softResetGraph();
+                }
             }
             dbpedia.getGraph().hardResetGraph();
         }
-        runtimes.keySet().forEach(type -> Helper.printWithTime("Type: " + type, runtimes.get(type)));
+        runtimes_basedOnTypes.keySet().forEach(type -> Helper.printWithTime("(type) -> " + type, runtimes_basedOnTypes.get(type)));
+        System.out.println("******************************************");
+        runtimes_basedOnDeltaAndK.keySet().forEach(key -> Helper.printWithTime("(delta and k) -> " + key, runtimes_basedOnDeltaAndK.get(key)));
 
         Helper.printWithTime("Total wall clock time: ", System.currentTimeMillis()-wallClockStart);
     }

@@ -14,7 +14,7 @@ public class Config {
 
     public static int entityID=1;
     public static HashSet<Double> delta= new HashSet<>();
-    public static int k;
+    public static HashSet<Integer> k=new HashSet<>();
     public static HashSet<String> types=new HashSet<>();
 
     public static boolean optimizedLoadingBasedOnTypes =false;
@@ -30,7 +30,7 @@ public class Config {
                      Expected arguments to parse:
                      -t <typeFile>
                      -d <dataFile>
-                     -k <integer> // Maximum size of the GKey
+                     -k List<integer> // List of K as each are for maximum size of the GKey
                      -delta List<double> // List of double values for minimum coverage threshold of the GKey (run multiple times). example: 0.1,0.2,0.3
                      -types List<names> // List of types for the center nodes (run multiple times). example: type1,type2,type3
                      -optimizedLoadingBasedOnTypes <true-false> // load based on specific types?
@@ -63,7 +63,7 @@ public class Config {
                 switch (conf[0].toLowerCase()) {
                     case "-t" -> typesPaths.add(conf[1]);
                     case "-d" -> dataPaths.add(conf[1]);
-                    case "-k" -> k = Integer.parseInt(conf[1]);
+                    case "-k" -> Arrays.stream(conf[1].split(",")).forEach(val -> k.add(Integer.valueOf(val)));
                     case "-delta" -> Arrays.stream(conf[1].split(",")).forEach(val -> delta.add(Double.valueOf(val)));
                     case "-types" -> types.addAll(List.of(conf[1].split(",")));
                     case "-optimizedloadingbasedontypes" -> optimizedLoadingBasedOnTypes = Boolean.parseBoolean(conf[1]);

@@ -37,7 +37,7 @@ public class Helper {
     public static void saveGKeys(String path, HashMap<String, ArrayList<CandidateGKey>> gKeys)
     {
         try {
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
             LocalDateTime now = LocalDateTime.now();
             String time = dtf.format(now);
             FileWriter file = new FileWriter("%s_%s.txt".formatted(path, time));
@@ -59,7 +59,7 @@ public class Helper {
     public static void saveToFile(String path, StringBuilder content)
     {
         try {
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
             LocalDateTime now = LocalDateTime.now();
             String time = dtf.format(now);
             FileWriter file = new FileWriter("%s_%s.txt".formatted(path, time));
