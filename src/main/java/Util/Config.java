@@ -17,7 +17,7 @@ public class Config {
     public static HashSet<Integer> k=new HashSet<>();
     public static HashSet<String> types=new HashSet<>();
 
-    public static boolean optimizedLoadingBasedOnTypes =false;
+    public static boolean optimize =true;
     public static boolean saveKeys=true;
     public static boolean debug =false;
     public static boolean preprocessOptimization = true;
@@ -33,7 +33,7 @@ public class Config {
                      -k List<integer> // List of K as each are for maximum size of the GKey
                      -delta List<double> // List of double values for minimum coverage threshold of the GKey (run multiple times). example: 0.1,0.2,0.3
                      -types List<names> // List of types for the center nodes (run multiple times). example: type1,type2,type3
-                     -optimizedLoadingBasedOnTypes <true-false> // load based on specific types?
+                     -optimize <true-false> // perform optimization based on unique vectors
                      -debug <true-false> // print details of matching
                      -saveKeys <true-false> // Save the mined GKeys
                      -language <language name> // Names like "N-Triples", "TURTLE", "RDF/XML"
@@ -66,7 +66,7 @@ public class Config {
                     case "-k" -> Arrays.stream(conf[1].split(",")).forEach(val -> k.add(Integer.valueOf(val)));
                     case "-delta" -> Arrays.stream(conf[1].split(",")).forEach(val -> delta.add(Double.valueOf(val)));
                     case "-types" -> types.addAll(List.of(conf[1].split(",")));
-                    case "-optimizedloadingbasedontypes" -> optimizedLoadingBasedOnTypes = Boolean.parseBoolean(conf[1]);
+                    case "-optimize" -> optimize = Boolean.parseBoolean(conf[1]);
                     case "-debug" -> debug = Boolean.parseBoolean(conf[1]);
                     case "-savekeys" -> saveKeys = Boolean.parseBoolean(conf[1]);
                     case "-language" -> language = conf[1];

@@ -38,7 +38,8 @@ public class GKMiner {
         Helper.setTemporaryTimer();
         this.lattice=new Lattice(summaryGraph,type,delta,k);
         lattice.createLattice();
-        Helper.printWithTime("Miner (Lattice creation time): ");
+        if(Config.debug)
+            Helper.printWithTime("Miner (Lattice creation time): ");
     }
 
     public void mine()
@@ -76,7 +77,7 @@ public class GKMiner {
                 if(v.getTypes().contains(gkey.getMainType()) && v.isInduced(gkey.getAttributes()))
                 {
                     numberOfInducedNodes++;
-                    if(!v.isUnique(attributeNames))
+                    if(!Config.optimize || !v.isUnique(attributeNames))
                     {
                         String var=v.valueOf(attributeNames);
                         if(!valueMap.containsKey(var))
@@ -146,7 +147,7 @@ public class GKMiner {
                 if(v.getTypes().contains(gkey.getMainType()) && v.isInduced(gkey.getAttributes(), gkey.getDependantTypes(), dataGraph.getGraph().outgoingEdgesOf(v)))
                 {
                     numberOfInducedNodes++;
-                    if(!v.isUnique(attributeNames))
+                    if(!Config.optimize || !v.isUnique(attributeNames))
                     {
                         String var = v.valueOf(gkey.getDependantTypes(),dataGraph.getGraph().outgoingEdgesOf(v));
                         if(var.equals("-1"))

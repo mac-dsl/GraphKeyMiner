@@ -65,10 +65,10 @@ public class testDBPedia {
                     temp = System.currentTimeMillis()-startTime;
                     runtimes_basedOnTypes.put(type, runtimes_basedOnTypes.get(type) + temp);
                     runtimes_basedOnDeltaAndK.put(delta+"_"+k, runtimes_basedOnDeltaAndK.get(delta+"_"+k) + temp);
-                    Helper.printWithTime("Mining (" + type + "," + delta + "," + k + ")", temp);
+                    Helper.printWithTime("Mining (" + type + "," + delta + "," + k  + ","+ Config.optimize + ")", temp);
 
                     if (Config.saveKeys)
-                        Helper.saveGKeys(type + "_" + delta + "_" + k, gKeys);
+                        Helper.saveGKeys(type + "_" + delta + "_"+ Config.optimize + "_" + k, gKeys);
 
                     dbpedia.getGraph().softResetGraph();
                 }

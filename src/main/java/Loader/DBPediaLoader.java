@@ -66,10 +66,6 @@ public class DBPediaLoader extends GraphLoader {
                 }
                 String nodeType = stmt.getObject().asResource().getLocalName().toLowerCase();
 
-                // ignore the node if the type is not in the validTypes and
-                // optimizedLoadingBasedOnTGFD is true
-                if(Config.optimizedLoadingBasedOnTypes && !validTypes.contains(nodeType))
-                    continue;
                 //int nodeId = subject.hashCode();
                 DataVertex v= (DataVertex) graph.getNode(nodeURI);
 
@@ -156,11 +152,8 @@ public class DBPediaLoader extends GraphLoader {
                 }
                 else
                 {
-                    if(!Config.optimizedLoadingBasedOnTypes || validAttributes.contains(predicate))
-                    {
-                        subjVertex.addAttribute(new Attribute(predicate,objectNodeURI));
-                        graphSize++;
-                    }
+                    subjVertex.addAttribute(new Attribute(predicate,objectNodeURI));
+                    graphSize++;
                 }
             }
             System.out.println("Subjects and Objects not found: " + numberOfSubjectsNotFound + " ** " + numberOfObjectsNotFound);

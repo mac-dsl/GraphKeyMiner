@@ -56,11 +56,6 @@ public class IMDBLoader extends GraphLoader{
                 String subjectType=temp[0];
                 String subjectID=temp[1];
 
-                // ignore the node if the type is not in the validTypes and
-                // optimizedLoadingBasedOnTypes is true
-                if(Config.optimizedLoadingBasedOnTypes && !validTypes.contains(subjectType))
-                    continue;
-
                 types.add(subjectType);
                 //int nodeId = subject.hashCode();
                 DataVertex subjectVertex= (DataVertex) graph.getNode(subjectID);
@@ -79,10 +74,8 @@ public class IMDBLoader extends GraphLoader{
                 if (object.isLiteral())
                 {
                     objectNodeURI = object.asLiteral().getString().toLowerCase();
-                    if(Config.optimizedLoadingBasedOnTypes && validAttributes.contains(predicate)) {
-                        subjectVertex.addAttribute(new Attribute(predicate, objectNodeURI));
-                        graphSize++;
-                    }
+                    subjectVertex.addAttribute(new Attribute(predicate, objectNodeURI));
+                    graphSize++;
                 }
                 else
                 {
@@ -99,11 +92,6 @@ public class IMDBLoader extends GraphLoader{
 
                     String objectType=temp[0];
                     String objectID=temp[1];
-
-                    // ignore the node if the type is not in the validTypes and
-                    // optimizedLoadingBasedOnTGFD is true
-                    if(Config.optimizedLoadingBasedOnTypes && !validTypes.contains(objectType))
-                        continue;
 
                     types.add(objectType);
                     DataVertex objectVertex= (DataVertex) graph.getNode(objectID);
