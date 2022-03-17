@@ -2,6 +2,7 @@ package Util;
 
 import Infra.CandidateGKey;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -34,13 +35,16 @@ public class Helper {
                 TimeUnit.MILLISECONDS.toMinutes(runTimeInMS) +  "(min)");
     }
 
-    public static void saveGKeys(String path, HashMap<String, ArrayList<CandidateGKey>> gKeys)
+    public static void saveGKeys(String path, HashMap<String, ArrayList<CandidateGKey>> gKeys, Long runtime)
     {
         try {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
             LocalDateTime now = LocalDateTime.now();
             String time = dtf.format(now);
             FileWriter file = new FileWriter("%s_%s.txt".formatted(path, time));
+            file.write("Total runtime: " + runtime + "(ms) ** " +
+                    TimeUnit.MILLISECONDS.toSeconds(runtime) + "(sec) ** " +
+                    TimeUnit.MILLISECONDS.toMinutes(runtime) +  "(min)\n");
             for (String type:gKeys.keySet()) {
                 file.write("***************Graph Keys for %s***************\n".formatted(type));
                 for (CandidateGKey gkey:gKeys.get(type)) {

@@ -57,9 +57,9 @@ public class testDBPedia {
                     DependencyGraph dependencyGraph = new DependencyGraph();
 
                     //System.out.println("Mining graph keys for type: " + type);
-                    startTime = System.currentTimeMillis();
                     HashMap<String, ArrayList<CandidateGKey>> gKeys = new HashMap<>();
                     GKMiner miner = new GKMiner(dbpedia.getGraph(), summaryGraph, dependencyGraph, gKeys, type, delta, k, true);
+                    startTime = System.currentTimeMillis();
                     miner.mine();
                     temp = System.currentTimeMillis()-startTime;
                     runtimes_basedOnTypes.put(type, runtimes_basedOnTypes.get(type) + temp);
@@ -67,7 +67,7 @@ public class testDBPedia {
                     Helper.printWithTime("Mining (" + type + "," + delta + "," + k  + ","+ Config.optimize + ")", temp);
 
                     if (Config.saveKeys)
-                        Helper.saveGKeys(type + "_" + delta + "_"+ Config.optimize + "_" + k, gKeys);
+                        Helper.saveGKeys(type + "_" + delta + "_"+ Config.optimize + "_" + k, gKeys, temp);
 
                     dbpedia.getGraph().softResetGraph();
                 }
