@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class testCombinations {
+public class testCombination {
 
     public static void main(String []args)
     {
@@ -27,7 +27,7 @@ public class testCombinations {
                     .stream()
                     .forEach(elem -> allCandidates.get(finalI).add(new CandidateGKey("type",elem)));
         }
-        System.out.printf("Hi");
+        System.out.println("Done.");
     }
 
 }

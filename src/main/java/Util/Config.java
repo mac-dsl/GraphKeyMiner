@@ -26,7 +26,24 @@ public class Config {
 
     public static boolean parse(String input) {
         if(input.equals("--help")) {
-            System.out.println("""
+            printHelp();
+            return false;
+        }
+        else
+        {
+            if(parseInputParams(input))
+                return true;
+            else
+            {
+                printHelp();
+                return false;
+            }
+        }
+    }
+
+    private static void printHelp()
+    {
+        System.out.println("""
                      Expected arguments to parse:
                      -t <typeFile>
                      -d <dataFile>
@@ -42,16 +59,9 @@ public class Config {
                      -saveSummaryGraph <true-false> // Save the summary graph in a separate file to be loaded later
                      -saveSummaryGraphBasedOnDelta <true-false> // Save the summary graph based on delta in a separate file in a more readable format
                     """.indent(5));
-            return false;
-        }
-        else
-        {
-            parseInputParams(input);
-            return true;
-        }
     }
 
-    private static void parseInputParams(String pathToConfigFile) {
+    private static boolean parseInputParams(String pathToConfigFile) {
         Scanner scanner;
         try {
             scanner = new Scanner(new File(pathToConfigFile));
@@ -76,8 +86,10 @@ public class Config {
                     case "-savesummarygraphbasedondelta" -> saveSummaryGraphBasedOnDelta = Boolean.parseBoolean(conf[1]);
                 }
             }
+            return true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            return false;
         }
     }
 }

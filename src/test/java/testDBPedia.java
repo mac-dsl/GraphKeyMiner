@@ -13,7 +13,6 @@ import java.util.HashMap;
 
 public class testDBPedia {
 
-
     public static void main(String []args) throws FileNotFoundException {
 
         long wallClockStart=System.currentTimeMillis();
