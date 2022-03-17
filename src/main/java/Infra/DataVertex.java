@@ -29,11 +29,14 @@ public class DataVertex extends Vertex implements Serializable {
                 .allMatch(node -> this.hasAttribute(node.getNodeName()));
     }
 
-    public boolean isInduced(ArrayList<CandidateNode> attributeNodes, ArrayList<CandidateNode> dependantTypes, Set<RelationshipEdge> edges)
+    public boolean isInduced(HashSet<String> attributeNames)
     {
-        boolean res = attributeNodes
-                .stream()
-                .allMatch(node -> this.hasAttribute(node.getNodeName()));
+        return attributeNames.stream().allMatch(this::hasAttribute);
+    }
+
+    public boolean isInduced(HashSet<String> attributeNames, ArrayList<CandidateNode> dependantTypes, Set<RelationshipEdge> edges)
+    {
+        boolean res = attributeNames.stream().allMatch(this::hasAttribute);
         if(!res)
             return false;
         boolean exists;

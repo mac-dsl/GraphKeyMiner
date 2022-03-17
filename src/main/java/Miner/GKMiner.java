@@ -73,8 +73,9 @@ public class GKMiner {
                     .collect(Collectors.toCollection(HashSet::new));
             HashMap<String, HashSet<String>> valueMap=new HashMap<>();
             double numberOfInducedNodes=0;
+            String type = gkey.getMainType();
             for (DataVertex v:dataGraph.getGraph().vertexSet()) {
-                if(v.getTypes().contains(gkey.getMainType()) && v.isInduced(gkey.getAttributes()))
+                if(v.getTypes().contains(type) && v.isInduced(attributeNames))
                 {
                     numberOfInducedNodes++;
                     if(!Config.optimize || !v.isUnique(attributeNames))
@@ -135,19 +136,21 @@ public class GKMiner {
                     .stream()
                     .map(CandidateNode::getNodeName)
                     .collect(Collectors.toCollection(HashSet::new));
-            HashSet<String> dependantTypes = gkey
+            HashSet<String> attributeNamesAndDependantTypes = gkey
                     .getDependantTypes()
                     .stream()
                     .map(CandidateNode::getNodeName)
                     .collect(Collectors.toCollection(HashSet::new));
-            attributeNames.addAll(dependantTypes);
+            attributeNamesAndDependantTypes.addAll(attributeNames);
+
             HashMap<String, HashSet<String>> valueMap=new HashMap<>();
             double numberOfInducedNodes=0;
+            String type = gkey.getMainType();
             for (DataVertex v:dataGraph.getGraph().vertexSet()) {
-                if(v.getTypes().contains(gkey.getMainType()) && v.isInduced(gkey.getAttributes(), gkey.getDependantTypes(), dataGraph.getGraph().outgoingEdgesOf(v)))
+                if(v.getTypes().contains(type) && v.isInduced(attributeNames, gkey.getDependantTypes(), dataGraph.getGraph().outgoingEdgesOf(v)))
                 {
                     numberOfInducedNodes++;
-                    if(!Config.optimize || !v.isUnique(attributeNames))
+                    if(!Config.optimize || !v.isUnique(attributeNamesAndDependantTypes))
                     {
                         String var = v.valueOf(gkey.getDependantTypes(),dataGraph.getGraph().outgoingEdgesOf(v));
                         if(var.equals("-1"))
@@ -155,7 +158,7 @@ public class GKMiner {
                             lattice.prune(gkey);
                             return false;
                         }
-                        var+=v.valueOf(attributeNames);
+                        var+=v.valueOf(attributeNamesAndDependantTypes);
                         if(!valueMap.containsKey(var))
                             valueMap.put(var,new HashSet<>());
                         valueMap.get(var).add(v.getVertexURI());
