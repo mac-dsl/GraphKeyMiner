@@ -13,6 +13,8 @@ public class VF2DataGraph implements Serializable {
 
     private HashMap<String, DataVertex> nodeMap;
 
+    private HashMap<String, HashSet<DataVertex>> nodesByType=new HashMap<>();
+
     public VF2DataGraph()
     {
         nodeMap= new HashMap<>();
@@ -40,8 +42,28 @@ public class VF2DataGraph implements Serializable {
         {
             graph.addVertex(v);
             nodeMap.put(v.getVertexURI(),v);
+
+            for (String type:v.getTypes()) {
+                addVertexTypeMap(type,v);
+            }
         }
     }
+
+    public void addVertexTypeMap(String type, DataVertex v)
+    {
+        if(!nodesByType.containsKey(type))
+            nodesByType.put(type,new HashSet<>());
+        nodesByType.get(type).add(v);
+    }
+
+    public HashSet<DataVertex> getVerticesByType(String type)
+    {
+        if(nodesByType.containsKey(type))
+            return nodesByType.get(type);
+        else
+            return new HashSet<>();
+    }
+
 
     public DataVertex getNode(String vertexURI)
     {

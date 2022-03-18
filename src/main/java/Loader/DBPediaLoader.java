@@ -67,7 +67,7 @@ public class DBPediaLoader extends GraphLoader {
                 String nodeType = stmt.getObject().asResource().getLocalName().toLowerCase();
 
                 //int nodeId = subject.hashCode();
-                DataVertex v= (DataVertex) graph.getNode(nodeURI);
+                DataVertex v= graph.getNode(nodeURI);
 
                 if (v==null) {
                     v=new DataVertex(nodeURI,nodeType);
@@ -75,6 +75,7 @@ public class DBPediaLoader extends GraphLoader {
                 }
                 else {
                     v.addType(nodeType);
+                    graph.addVertexTypeMap(nodeType,v);
                 }
             }
             System.out.println("Done. Number of Types: " + graph.getSize());

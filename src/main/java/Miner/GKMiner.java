@@ -74,8 +74,8 @@ public class GKMiner {
             HashMap<String, HashSet<String>> valueMap=new HashMap<>();
             double numberOfInducedNodes=0;
             String type = gkey.getMainType();
-            for (DataVertex v:dataGraph.getGraph().vertexSet()) {
-                if(v.getTypes().contains(type) && v.isInduced(attributeNames))
+            for (DataVertex v:dataGraph.getVerticesByType(type)) {
+                if(v.isInduced(attributeNames))
                 {
                     numberOfInducedNodes++;
                     if(!Config.optimize || !v.isUnique(attributeNames))
@@ -146,8 +146,8 @@ public class GKMiner {
             HashMap<String, HashSet<String>> valueMap=new HashMap<>();
             double numberOfInducedNodes=0;
             String type = gkey.getMainType();
-            for (DataVertex v:dataGraph.getGraph().vertexSet()) {
-                if(v.getTypes().contains(type) && v.isInduced(attributeNames, gkey.getDependantTypes(), dataGraph.getGraph().outgoingEdgesOf(v)))
+            for (DataVertex v:dataGraph.getVerticesByType(type)) {
+                if(v.isInduced(attributeNames, gkey.getDependantTypes(), dataGraph.getGraph().outgoingEdgesOf(v)))
                 {
                     numberOfInducedNodes++;
                     if(!Config.optimize || !v.isUnique(attributeNamesAndDependantTypes))
