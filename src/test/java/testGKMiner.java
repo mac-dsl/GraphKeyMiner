@@ -34,7 +34,7 @@ public class testGKMiner {
 
         System.out.println("Loading the dataset.");
         long startTime=System.currentTimeMillis(),temp;
-        GraphLoader graphLoader = null;
+        GraphLoader graphLoader;
         if(Config.dataset.equals("dbpedia"))
            graphLoader = new DBPediaLoader(Config.typesPaths, Config.dataPaths);
         else if (Config.dataset.equals("imdb"))
