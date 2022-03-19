@@ -41,7 +41,7 @@ public class Config {
         }
     }
 
-    private static void printHelp()
+    public static void printHelp()
     {
         System.out.println("""
                      Expected arguments to parse:

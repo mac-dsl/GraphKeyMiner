@@ -60,16 +60,16 @@ public class Helper {
         }
     }
 
-    public static void saveToFile(String path, StringBuilder content)
+    public static void saveToFile(String name,String format, StringBuilder content)
     {
         try {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
             LocalDateTime now = LocalDateTime.now();
             String time = dtf.format(now);
-            FileWriter file = new FileWriter("%s_%s.txt".formatted(path, time));
+            FileWriter file = new FileWriter("%s_%s.%s".formatted(name, time,format));
             file.write(content.toString());
             file.close();
-            System.out.println("Successfully wrote to the file: " + path);
+            System.out.println("Successfully wrote to the file: " + name);
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();

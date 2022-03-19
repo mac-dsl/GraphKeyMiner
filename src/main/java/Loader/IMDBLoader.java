@@ -66,6 +66,7 @@ public class IMDBLoader extends GraphLoader{
                 }
                 else {
                     subjectVertex.addType(subjectType);
+                    graph.addVertexTypeMap(subjectType,subjectVertex);
                 }
 
                 String predicate = stmt.getPredicate().getLocalName().toLowerCase();
@@ -94,13 +95,14 @@ public class IMDBLoader extends GraphLoader{
                     String objectID=temp[1];
 
                     types.add(objectType);
-                    DataVertex objectVertex= (DataVertex) graph.getNode(objectID);
+                    DataVertex objectVertex= graph.getNode(objectID);
                     if (objectVertex==null) {
                         objectVertex=new DataVertex(objectID,objectType);
                         graph.addVertex(objectVertex);
                     }
                     else {
                         objectVertex.addType(objectType);
+                        graph.addVertexTypeMap(objectType,objectVertex);
                     }
                     graph.addEdge(subjectVertex, objectVertex, new RelationshipEdge(predicate));
                     graphSize++;

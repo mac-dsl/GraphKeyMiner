@@ -53,7 +53,7 @@ public class vickyPreprocess {
                     }
                 }
             }
-            Helper.saveToFile("Vickey_"+type+".tsv",sb);
+            Helper.saveToFile("Vickey_"+type,"tsv",sb);
         }
 
     }
