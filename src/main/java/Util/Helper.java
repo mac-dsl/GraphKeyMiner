@@ -60,13 +60,17 @@ public class Helper {
         }
     }
 
-    public static void saveToFile(String name,String format, StringBuilder content)
+    public static void saveToFile(String name,String format, StringBuilder content, boolean putDate)
     {
         try {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
             LocalDateTime now = LocalDateTime.now();
             String time = dtf.format(now);
-            FileWriter file = new FileWriter("%s_%s.%s".formatted(name, time,format));
+            FileWriter file;
+            if(putDate)
+                file = new FileWriter("%s_%s.%s".formatted(name, time,format));
+            else
+                file = new FileWriter("%s.%s".formatted(name,format));
             file.write(content.toString());
             file.close();
             System.out.println("Successfully wrote to the file: " + name);

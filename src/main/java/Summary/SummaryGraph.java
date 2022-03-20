@@ -114,7 +114,7 @@ public class SummaryGraph {
                         + edge.getLabel() + ","
                         + edge.getCount() + "\n")
                 .forEach(sb::append);
-        Helper.saveToFile("summaryGraph","txt",sb);
+        Helper.saveToFile("summaryGraph","txt",sb,false);
     }
 
     public void saveToFile(double delta)
@@ -165,7 +165,7 @@ public class SummaryGraph {
                 }
             }
         }
-        Helper.saveToFile("summaryGraph[" + delta + "]","txt",sb);
+        Helper.saveToFile("summaryGraph[" + delta + "]","txt",sb,false);
     }
 
     private void addVertices()

@@ -110,7 +110,7 @@ public class testGKMiner {
                 }
                 sb.append("\n");
             }
-            Helper.saveToFile("Runtime_MS_"+type,"txt",sb);
+            Helper.saveToFile("Runtime_MS_"+type,"txt",sb,false);
         }
 
         for (String type:Config.types) {
@@ -127,7 +127,7 @@ public class testGKMiner {
                 }
                 sb.append("\n");
             }
-            Helper.saveToFile("Runtime_S_"+type,"txt",sb);
+            Helper.saveToFile("Runtime_S_"+type,"txt",sb,false);
         }
 
         for (String type:Config.types) {
@@ -144,7 +144,7 @@ public class testGKMiner {
                 }
                 sb.append("\n");
             }
-            Helper.saveToFile("Runtime_M_"+type,"txt",sb);
+            Helper.saveToFile("Runtime_M_"+type,"txt",sb,false);
         }
 
         Helper.printWithTime("Total wall clock time: ", System.currentTimeMillis()-wallClockStart);
