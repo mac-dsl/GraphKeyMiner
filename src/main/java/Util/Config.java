@@ -44,7 +44,7 @@ public class Config {
     public static void printHelp()
     {
         System.out.println("""
-                     Expected arguments to parse:
+                     Expected arguments to parse in a config file:
                      -t <typeFile>
                      -d <dataFile>
                      -k List<integer> // List of K as each are for maximum size of the GKey
